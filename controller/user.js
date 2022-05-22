@@ -136,7 +136,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
   </style>
 <div style="box-sizing: border-box; width: 95vw; max-width: 480px; margin: auto;">
   <header style="box-sizing: border-box; display: block; margin-bottom: 40px; min-height: 60px; padding-top: 50px;">
-    <img style="box-sizing: border-box; display: block; margin-bottom: 30px; margin-left: auto; margin-right: auto; padding: 30px; width: 150px;" src="../../assets/img/logos/favicon.png" alt="logo">
+    <img style="box-sizing: border-box; display: block; margin-bottom: 30px; margin-left: auto; margin-right: auto; padding: 30px; width: 150px;" src="http://127.0.0.1:5500/assets/img/logos/favicon.png" alt="logo">
     <hr style="border: 1px solid #e4e4e4; width:auto; box-sizing: border-box; margin-bottom: 5px; width: 100%;">
     <h1 style="box-sizing: border-box; background-image: url(https://cdn-icons-png.flaticon.com/64/3199/3199878.png); background-position: 100% 50%; background-repeat: no-repeat; color: #333; font-size: 20px; font-weight: 700; padding-top: 25px; text-align: center;"> BOOM SHAKALAK, WE'RE GLAD <br> YOU'RE HERE!</h1>
   </header>
