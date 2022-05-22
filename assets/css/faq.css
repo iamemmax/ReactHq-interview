@@ -1,0 +1,88 @@
+/*FAQ SECTION*/
+.faq-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0px 50px 0px;
+    background-color: var(--nav);
+}
+
+.faq1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+    padding: 20px 0px 20px 0px;
+}
+
+.faq2{
+    width: auto;
+}
+
+.faq2-item-total{
+    display: flex;
+    flex-direction: column;
+}
+
+.accordion {
+    width: 100%;
+    background-image: url('./assets/bi_plus-lg.svg'), 
+    url('./assets/path312-1.svg');
+    background-repeat: no-repeat;
+    background-position: right 50%, left 50%;
+}
+
+.accordion-active, .accordion:hover {
+    background-color: var(--nav-mobile);
+    cursor: pointer;
+  }
+
+.accordion.accordion-active {
+    background-image: url('./assets/bx_bx-minus.svg'), 
+    url('./assets/path312-1.svg');
+}
+
+.panel {
+    padding: 0 18px;
+    background-color: var(--nav);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    font-size: 0.9rem;
+    color: #010101;
+}
+
+.panel p {
+    margin: 1rem 0rem 1rem 0rem;   
+}
+
+.faq2-item {
+    display: flex;
+    align-items: center;
+    padding-left: 2%;
+}
+
+.faq2-item-paragraph {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 1rem;
+    color: #010101;
+}
+
+hr {
+    margin-top: 0.1px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 768px){
+    .faq1 {
+        font-size: 1.2rem;
+    }
+    .faq2-item{
+        width: 98%;
+    }
+    .faq2-item-paragraph{
+        width: 90%;
+    }
+}

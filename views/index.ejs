@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="keywords"
+      content="tech jobs,tech jobs in nigeria, tech jobs in abuja,tech jobs without coding, tech jobs in lagos,learn programming from scratch,learn programming in abuja,learn programming for beginners,learn programming for free,learn programming academy udemy,ReAct Africa,React africa,
+    tech academy in nigeria,tech academy in lagos,tech academy reviews,tech academy cost,tech academy cost,bootcamp programming,bootcamp in lagos,bootcamps in nigeria"
+    />
+    <meta name="description" content="Start your Tech Career for Free!" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="shortcut icon"
+      href="/assets/img/logos/Icon - rounded square.png"
+      type="image/x-icon"
+    />
+    <!-- Bootstrap CSS -->
+    <link href="../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/css/all.min.css" rel="stylesheet" />
+    <link href="../assets/css/fontawesome.css" rel="stylesheet" />
+    <link href="../assets/css/aos.css" rel="stylesheet" />
+    <link href="../assets/css/style.css" rel="stylesheet" />
+    <link href="../assets/css/responsive.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="../assets/" />
+    <title>ReactHQ - Registration</title>
+  </head>
+
+  <body>
+    <!--------- Offcanvas area start --------->
+    <div class="offcanvas-area">
+      <div class="menu-close">
+        <i class="fal fa-times"></i>
+      </div>
+      <div class="offcanvas-menu">
+        <div class="main-menu">
+          <ul class="d-block">
+            <li><a href="">FAQs</a></li>
+          </ul>
+          <div class="header__btns">
+            <a href="#" class="common-btn btn-bordered">Sign In</a>
+            <a href="#" class="common-btn"> Sign Up</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="offcanvas-overlay"></div>
+    <!--------- Offcanvas area end --------->
+
+    <!--------- Header area Start --------->
+    <header class="header">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="header__logo">
+          <a href="index.html"
+            ><img src="./assets/img/logos/logo-main.svg" alt=""
+          /></a>
+        </div>
+        <div class="header__right d-flex align-items-center">
+          <nav class="header__nav">
+            <ul class="m-0 p-0 d-flex list-unstyled">
+              <li><a href="#">FAQs</a></li>
+            </ul>
+          </nav>
+          <div class="header__btns d-flex align-items-center">
+            <a href="#" class="common-btn btn-bordered">Sign In</a>
+            <a href="#" class="common-btn"> Sign Up</a>
+          </div>
+        </div>
+        <div class="menu-open">
+          <i class="far fa-bars"></i>
+        </div>
+      </div>
+    </header>
+    <!--------- Header area end --------->
+
+    <!--------- Main area Start --------->
+    <main class="main">
+      <!--------- Hero area Start --------->
+      <section class="hero">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="hero__content">
+                <h2>You're about to make the best decision of your life!</h2>
+                <p>
+                  Take a step towards your professional, personal and financial
+                  goals with in-demand skills with our Intensive program.
+                </p>
+              </div>
+              <div class="hero__content">
+                <h3>Important things to note before signing up</h3>
+                <p>
+                  Enroll today and, for as few as 5 hours a week, you can get
+                  the in-demand skills you need to help land a high-paying tech
+                  job. Learn at your own pace, when and where it’s convenient
+                  for you.
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="hero__right">
+                <div class="hero__thumbnail__wrap">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="hero__thumbnail">
+                        <img src="./assets/img/hero-img-1.png" alt="" />
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="hero__thumbnail">
+                        <img src="./assets/img/hero-img-2.png" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!--------- Hero area End --------->
+
+      <!--------- Registration area Start --------->
+      <section class="registration__area">
+        <div class="container">
+          <div class="registration__form">
+            <form action="/signup" method="post">
+               <% if (typeof error !== "undefined") { %>
+         
+            <% error.forEach(errors => { %>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <p><%= errors.msg %></p> 
+                    
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                
+                <% }) %>
+                <% } %>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form__input">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="First name"
+                      name="firstName"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form__input">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Last name"
+                      name="lastName"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form__input">
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="Email Address"
+                      name="email"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form__input">
+                    <input
+                      type="tel"
+                      class="form-control"
+                      placeholder="Enter your phone number"
+                      name="phone"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form__input">
+                    <input
+                      type="course"
+                      class="form-control"
+                      placeholder="Select a Course of Choice"
+                      name="course"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form__input">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter your mintyn bank Account No"
+                      name="acct_No"
+                    />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form__submit pt-2">
+                    <button class="common-btn w-100" type="submit">
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+      <!--------- Registration area End --------->
+    </main>
+    <!--------- Main area end --------->
+
+    <!--------- Footer area Start --------->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__main">
+          <div class="footer__logo">
+            <a href="#"
+              ><img src=".assets/img/logos/logo-footer.svg" alt=""
+            /></a>
+          </div>
+          <div class="row">
+            <div class="col-lg-8 col-md-12">
+              <div class="row">
+                <div class="col-md-3 col-sm-6">
+                  <div class="footer__item">
+                    <h4>Quick Links</h4>
+                    <ul>
+                      <li><a href="#">Build with us</a></li>
+                      <li><a href="#">Hire Talents</a></li>
+                      <li><a href="#">FAQ</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="footer__item">
+                    <h4>Company</h4>
+                    <ul>
+                      <li><a href="#">Join our team</a></li>
+                      <li><a href="#">Events</a></li>
+                      <li><a href="#">Contact us</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="footer__item">
+                    <h4>Contact</h4>
+                    <ul>
+                      <li>
+                        <a href="mailto:hi@reactng.com">hi@reactng.com</a>
+                      </li>
+                      <li>
+                        <a href="tel:+234-915-467-5121">+234-915-467-5121</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                  <div class="footer__item">
+                    <h4>Legal</h4>
+                    <ul>
+                      <li><a href="#">Privacy policy</a></li>
+                      <li><a href="#">Terms of service</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="footer__item">
+                <h4>Subscribe</h4>
+                <ul>
+                  <li>Stay informed, subscribe to our newsletter</li>
+                </ul>
+                <div class="footer__form">
+                  <form action="">
+                    <input
+                      type="email"
+                      placeholder="Enter your email address"
+                    />
+                    <button class="common-btn btn-bordered">Subscribe!</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer__bottom d-flex">
+          <p>
+            <span>&copy;</span> 2022 ReactHQ- ReactHQ, Sprint and Spaces are
+            Trademarks of Hydratech Software Solutions Ltd. Lagos
+          </p>
+          <div class="footer__social d-flex align-items-center">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!--------- Footer area End --------->
+
+    <script src="./assets/js/jquery.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script src="./assets/js/popper.js"></script>
+    <script src="./assets/js/aos.js"></script>
+    <script src="./assets/js/main.js"></script>
+  </body>
+</html>
