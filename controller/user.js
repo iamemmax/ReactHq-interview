@@ -1,11 +1,11 @@
-// @access: PUBLIC
-// @desc: Rendering index.html
 const User = require("../model/UserSchema");
 const asyncHandler = require("express-async-handler");
 const axios = require("axios");
 const sendEmail = require("../config/email")
 
 
+// @access: PUBLIC
+// @desc: Rendering index.html
 exports.getHomePage = (req, res) => {
   res.render("index");
 };
@@ -20,7 +20,6 @@ exports.submitForm = asyncHandler(async (req, res) => {
   if (!firstName || !lastName || !email || !phone || !acct_No || !course) {
 
     error.push({msg: "all field are required"})
-    
       res.render("index",{error})
 
     return
@@ -34,7 +33,6 @@ exports.submitForm = asyncHandler(async (req, res) => {
     return regex.test(email);
   }
   if (!validateEmail(email)) {
-    console.log("please enter a valid email");
     error.push({msg: "please enter a valid email"});
     res.render("index",{error})
     return
@@ -47,7 +45,6 @@ exports.submitForm = asyncHandler(async (req, res) => {
     try {
       
       if(emailExist){
-        console.log("Email already linked to existing registration");
         error.push({msg: "Email already linked to existing registration"})
       res.render("index",{error})
 
@@ -69,7 +66,6 @@ exports.submitForm = asyncHandler(async (req, res) => {
         console.log(data);
       }
     }).catch(err => {
-      console.log("Account number does not exist");
       error.push({msg:"Account number does not exist"})
       res.render("index", {error})
     })
