@@ -1,8 +1,7 @@
 const User = require("../model/UserSchema");
 const asyncHandler = require("express-async-handler");
 const axios = require("axios");
-const sendEmail = require("../config/email")
-
+const sendEmail = require("../config/email");
 
 // @access: PUBLIC
 // @desc: Rendering index.html
@@ -10,21 +9,19 @@ exports.getHomePage = (req, res) => {
   res.render("index");
 };
 
-// 
+//
 exports.submitForm = asyncHandler(async (req, res) => {
   let error = [];
- 
+
   let { firstName, lastName, email, phone, acct_No, course } = req.body;
 
   //  @desc check if user fill all fields
   if (!firstName || !lastName || !email || !phone || !acct_No || !course) {
+    error.push({ msg: "all field are required" });
+    res.render("index", { error });
 
-    error.push({msg: "all field are required"})
-      res.render("index",{error})
-
-    return
+    return;
   }
-
 
   // @desc check if user enter valid email
   function validateEmail(email) {
@@ -33,64 +30,61 @@ exports.submitForm = asyncHandler(async (req, res) => {
     return regex.test(email);
   }
   if (!validateEmail(email)) {
-    error.push({msg: "please enter a valid email"});
-    res.render("index",{error})
-    return
+    error.push({ msg: "please enter a valid email" });
+    res.render("index", { error });
+    return;
   }
 
+  // check if user email already exist
 
-   // check if user email already exist
+  const emailExist = await User.findOne({ email: email });
+  const acctNoExist = await User.findOne({ acct_No: acct_No });
+  // const emailExist = await User.findOne({ email: email });
+  try {
+    if (emailExist) {
+      error.push({ msg: "Email already linked to existing registration" });
+      res.render("index", { error });
 
-    const emailExist = await User.findOne({ email: email });
+      return;
+    }
+    if (acctNoExist) {
+      error.push({
+        msg: "account Number already linked to existing registration",
+      });
+      res.render("index", { error });
+
+      return;
+    }
+
+    // validate acct no
+    let bank_Code = 50304;
     try {
-      
-      if(emailExist){
-        error.push({msg: "Email already linked to existing registration"})
-      res.render("index",{error})
+      let valiadateAccNo = await axios.get(
+        `https://api.paystack.co/bank/resolve?account_number=${acct_No.trim()}&bank_code=${bank_Code}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          },
+        }
+      );
+      if (valiadateAccNo) {
+        console.log(valiadateAccNo.data);
 
-        return
-        
-      }
+        const newUser = await new User({
+          firstName,
+          lastName,
+          email,
+          acct_No,
+          phone,
+          course,
+        }).save();
 
-        
-        // validate acct no
-      let bank_Code = 50304;
-     await axios.get(`https://api.paystack.co/bank/resolve?account_number=${acct_No.trim()}&bank_code=${bank_Code}`,
-      {
-        headers: {
-          "Authorization": `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        },
-      }
-    ).then(data =>{
-    if(data.status  === true){
-        console.log(data);
-      }
-    }).catch(err => {
-      error.push({msg:"Account number does not exist"})
-      res.render("index", {error})
-    })
-
-      
-
-
-   
- 
-      const newUser = await new User({
-        firstName,
-        lastName,
-        email,
-        acct_No,
-        phone,
-        course
-      }).save()
-
-
-      if(newUser){
-        // send confirmation mail
-         sendEmail(
-                email,
-                "ReactHq registration ",
-              `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
+        if (newUser) {
+          // send confirmation mail
+          sendEmail(
+            email,
+            "ReactHq registration ",
+            `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
   <style>
     @media screen and (max-width: 768px) {
       header {
@@ -172,31 +166,31 @@ exports.submitForm = asyncHandler(async (req, res) => {
   </footer>
 </div>
 </div>
-`);
+`
+          );
 
-      
-              res.render("success", {
-                firstName,
-                lastName,
-                email,
-              })
-
-      }else{
-       
-      res.render("index", {
-        error,
-         email,
-      })
+          res.redirect("https://internship.reactng.com");
+        } else {
+          res.render("index", {
+            error,
+            email,
+          });
+        }
+      } else {
+        error.push({ msg: "Account number does not exist" });
+        res.render("index", { error });
+        return;
       }
-    
+    } catch (err) {
+      error.push({ msg: "Account number does not exist" });
+      res.render("index", { error });
+      return;
+    }
   } catch (error) {
     console.log(error.message);
 
     res.render("index", {
-        error:error.message,
-        
-      })
+      error: error.message,
+    });
   }
-
- 
 });
