@@ -4,7 +4,7 @@ module.exports = async (email, subject, html) => {
   let transporter = await nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
-    port: 465,
+    port: 587,
     secure: true,
     auth: {
       user: process.env.EMAIL,
