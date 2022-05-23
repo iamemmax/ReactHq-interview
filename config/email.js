@@ -7,8 +7,8 @@ module.exports = async (email, subject, html) => {
     port: 465,
     secure: true,
     auth: {
-      user: process.env.email,
-      pass: process.env.password,
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
     },
   });
 
