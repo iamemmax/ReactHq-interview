@@ -169,7 +169,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
 `
           );
 
-          res.redirect("https://internship.reactng.com");
+          res.render("success", { firstName });
         } else {
           res.render("index", {
             error,
