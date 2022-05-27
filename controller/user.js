@@ -6,7 +6,7 @@ const sendEmail = require("../config/email");
 // @access: PUBLIC
 // @desc: Rendering index.html
 exports.getHomePage = (req, res) => {
-  res.render("index");
+  res.render("index", { layout: false });
 };
 
 //
@@ -18,7 +18,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
   //  @desc check if user fill all fields
   if (!firstName || !lastName || !email || !phone || !acct_No || !course) {
     error.push({ msg: "all field are required" });
-    res.render("index", { error });
+    res.render("index", { error, layout: false });
 
     return;
   }
@@ -31,7 +31,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter a valid email" });
-    res.render("index", { error });
+    res.render("index", { error, layout: false });
     return;
   }
 
@@ -43,7 +43,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
   try {
     if (emailExist) {
       error.push({ msg: "Email already linked to existing registration" });
-      res.render("index", { error });
+      res.render("index", { error, layout: false });
 
       return;
     }
@@ -51,7 +51,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
       error.push({
         msg: "account Number already linked to existing registration",
       });
-      res.render("index", { error });
+      res.render("index", { error, layout: false });
 
       return;
     }
@@ -169,21 +169,22 @@ exports.submitForm = asyncHandler(async (req, res) => {
 `
           );
 
-          res.render("success", { firstName });
+          res.render("success", { firstName, layout: false });
         } else {
           res.render("index", {
             error,
             email,
+            layout: false,
           });
         }
       } else {
         error.push({ msg: "Account number does not exist" });
-        res.render("index", { error });
+        res.render("index", { error, layout: false });
         return;
       }
     } catch (err) {
       error.push({ msg: "Account number does not exist" });
-      res.render("index", { error });
+      res.render("index", { error, layout: false });
       return;
     }
   } catch (error) {
@@ -191,6 +192,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
 
     res.render("index", {
       error: error.message,
+      layout: false,
     });
   }
 });
