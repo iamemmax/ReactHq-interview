@@ -287,10 +287,11 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
     <br style="box-sizing: border-box;">
     <br style="box-sizing: border-box;"> Password Reset
     <br style="box-sizing: border-box;">
-    <br style="box-sizing: border-box;"> follow this link to reset your password <a href=localhost:5000/admin/reset-password/${findUserByEmail._id}>Reset</a>
+    <br style="box-sizing: border-box;"> follow this link to reset your password <a href="localhost:5000/admin/reset-password/${findUserByEmail._id}">Reset Password</a>
      <br>
-     <a href=localhost:5000/admin/reset-password/${findUserByEmail._id}>here</a>
-     localhost:5000/admin/reset-password/${findUserByEmail._id}
+     
+   
+    
     <br style="box-sizing: border-box;">
     
     
