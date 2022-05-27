@@ -3,6 +3,16 @@ const userSchema = require("../model/UserSchema");
 const pdf = require("html-pdf");
 const fs = require("fs");
 const path = require("path");
+const { findOneAndDelete } = require("../model/UserSchema");
+
+// @DESC: dashboard
+exports.GetDashboard = asyncHandler(async (req, res) => {
+  res.render("./admin/dashboard", {
+    user: req.user,
+    layout: "./layouts/dashboardLayouts",
+  });
+});
+
 //@DESC: get all users by admin
 exports.getAllUser = asyncHandler(async (req, res) => {
   let users = await userSchema.find().sort({ createdAt: "-1" });
@@ -36,7 +46,7 @@ exports.generateUserPdf = asyncHandler(async (req, res) => {
   );
 });
 
-exports.editUser = asyncHandler(async (req, res) => {
+exports.editUserPage = asyncHandler(async (req, res) => {
   let error = [];
   let user = await userSchema.findById(req.params.id);
   if (!user) {
@@ -120,3 +130,14 @@ exports.updateUser = async (req, res) => {
     });
   }
 };
+
+//@DESC: Delete user
+exports.deleteUser = asyncHandler(async (req, res) => {
+  await userSchema.findOneAndDelete({ _id: req.params.id }, (err, data) => {
+    if (err) console.log(err);
+    if (data) {
+      // req.flash("success", "product deleted successfully")
+      res.redirect(`/admin/users/${req.user.id}`);
+    }
+  });
+});

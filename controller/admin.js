@@ -16,8 +16,7 @@ exports.getSignupPage = asyncHandler(async (req, res) => {
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
   let error = [];
-  let proImg = [];
-  console.log(req.body);
+
   let { username, email, password, password2 } = req.body;
   // @DESC:check if user filled all field
   if (!username || !email || !password || !password2) {
@@ -388,12 +387,4 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
       res.render("./admin/resetPassword", { error });
     }
   }
-});
-
-// @DESC: dashboard
-exports.GetDashboard = asyncHandler(async (req, res) => {
-  res.render("./admin/dashboard", {
-    user: req.user,
-    layout: "./layouts/dashboardLayouts",
-  });
 });

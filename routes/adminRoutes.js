@@ -21,8 +21,6 @@ router
 router.route("/login").get(getLoginPage).post(loginAdmin);
 router.get("/logout", LogOutAdmin);
 
-router.get("/dashboard", protect, GetDashboard);
-
 // @DESC forget password
 
 router.route("/forget-password").get(forgetPassword).post(RequestPasswordReset);
