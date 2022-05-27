@@ -30,7 +30,7 @@ const adminSchema = new mongoose.Schema({
     default: "admin",
     enum: ["member", "admin"],
   },
-  profile: { type: String },
+  profile: [],
 
   password: {
     type: String,

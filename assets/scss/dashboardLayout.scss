@@ -1,0 +1,109 @@
+@import "./utilities//mixin";
+
+*{
+padding: 0;
+margin: 0;
+box-sizing: border-box;
+}
+
+img{
+    width: 50px;
+    height: auto;
+}
+
+.dashboard-container{
+    // height: 100vh;
+    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    column-gap: 20px;
+    
+    
+    header{
+        background-color: rgba(90, 88, 88, 0.884);
+        grid-column: span 5;
+      padding: 10px 25px;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        // padding: 0 20px;
+        justify-items: stretch;
+        align-items: center;
+        column-gap: 20px;
+
+        
+        .logo{
+            // border: 2px solid red;
+            grid-column: span 1;
+            img{
+                width: 100px;
+                height: auto;
+            }
+        }
+        
+        .search{
+            grid-column: span 3;
+            align-items: center;
+            justify-items: center;
+            display: flex;
+
+            input{
+                width: 70%;
+                margin: 0px auto;
+                padding: 5px;
+                height: 40px;
+                border-radius: 20px;
+                border: none;
+                outline: none;
+                padding: 0 20px;
+                @media screen and (max-width:900px) {
+                width: 100%;
+                }
+            }
+        }
+        .profile{
+            grid-column: span 1;
+            // align-items: flex-end;
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            cursor: pointer;
+
+            img{
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+            h2{
+                font-size: 14px;
+                font-weight: 600;
+                font-family: sans-serif;
+                padding-left: 5px;
+            }
+        }
+       
+    }
+    aside{
+    grid-column: span  1;
+    box-shadow: 1px 0px 1px   rgba(7, 7, 7, 0.24);
+    height: 88vh;
+    padding: 20px;
+    
+    @media screen and (max-width:920px) {
+        grid-column: span 5;
+        padding: 20px;
+   }
+
+
+   
+    }
+    main{
+    // border: 2px solid rgb(251, 255, 0);
+    grid-column: span 4;
+    @media screen and (max-width:920px) {
+            grid-column: span 5;
+            padding: 20px;
+        }
+
+    }
+}

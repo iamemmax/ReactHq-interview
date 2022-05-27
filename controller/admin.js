@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs");
 const sharp = require("sharp");
 const passport = require("passport");
 const sendEmail = require("../config/email");
-const crypto = require("crypto");
-const cloudinary = require("cloudinary").v2;
+// const crypto = require("crypto");
+const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
 
 // @DESC: render admin signup page
@@ -16,6 +16,7 @@ exports.getSignupPage = asyncHandler(async (req, res) => {
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
   let error = [];
+  let proImg = [];
   console.log(req.body);
   let { username, email, password, password2 } = req.body;
   // @DESC:check if user filled all field
@@ -87,10 +88,13 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
       .resize(200, 200)
       .png({ quality: 90, force: true })
 
-      .toFile(`./assets/upload/${req.file.filename}.png`);
+      .toFile(`assets/upload/${req.file.filename}.png`);
+    // fs.unlinkSync(req.file.path);
 
     // @DESC save it to cloudinary
-    let uploadImg = await cloudinary.uploader.upload(req.file.path);
+    let uploadImg = await cloudinary.uploader.upload(req.file.path, {
+      upload_preset: "reactHq",
+    });
 
     // @DESC if error occur when trying to upload img to cloud server
     if (!uploadImg) {
@@ -115,10 +119,9 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
         let newAdmin = await new adminSchema({
           username,
           email,
-          profile: cloudImgInfo,
           password: hash,
+          profile: [cloudImgInfo],
         }).save();
-        console.log(hash);
 
         if (newAdmin) {
           console.log(newAdmin);
@@ -132,8 +135,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
       });
     });
   } catch (error) {
-    fs.unlinkSync(req.file.path);
-    error.push({ msg: "unable to register admin" });
+    // error.push({ msg: "unable to register admin" });
     res.render("./admin/addAdmin", { error: error.message });
     return;
   }
@@ -191,7 +193,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
           res.render("./admin/LoginAdmin", { error });
         }
 
-        res.redirect("./admin/dashboard");
+        res.redirect("./dashboard");
       });
     })(req, res, next);
   } catch (error) {
@@ -203,9 +205,13 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
 
 //@DESC logout Admin
 exports.LogOutAdmin = asyncHandler(async (req, res) => {
-  req.logOut();
-  req.flash("logout", "you have successfully logout");
-  res.redirect("./admin/LoginAdmin");
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("./login");
+  });
+  // req.flash("logout", "you have successfully logout");
 });
 
 //@DESC: forget password
@@ -281,7 +287,10 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
     <br style="box-sizing: border-box;">
     <br style="box-sizing: border-box;"> Password Reset
     <br style="box-sizing: border-box;">
-    <br style="box-sizing: border-box;"> follow this link to reset your password <a href="localhost:5000/admin/reset/${findUserByEmail._id}">Reset</a>
+    <br style="box-sizing: border-box;"> follow this link to reset your password <a href=localhost:5000/admin/reset-password/${findUserByEmail._id}>Reset</a>
+     <br>
+     <a href=localhost:5000/admin/reset-password/${findUserByEmail._id}>here</a>
+     localhost:5000/admin/reset-password/${findUserByEmail._id}
     <br style="box-sizing: border-box;">
     
     
@@ -308,6 +317,7 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
 </div>
 `
       );
+      res.render("./success", { firstName: "", layout: false });
     } else {
       error.push({ msg: "user not found" });
       res.render("./admin/forgetPassword", { error });
@@ -381,5 +391,8 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
 
 // @DESC: dashboard
 exports.GetDashboard = asyncHandler(async (req, res) => {
-  res.render("./admin/dashboard", { user: req.user, layout: false });
+  res.render("./admin/dashboard", {
+    user: req.user,
+    layout: "./layouts/dashboardLayouts",
+  });
 });
