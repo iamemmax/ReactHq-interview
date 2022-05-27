@@ -9,6 +9,7 @@ const methodOverride = require("method-override");
 const Layout = require("express-ejs-layouts");
 const session = require("express-session");
 const passport = require("passport");
+const flash = require("connect-flash");
 
 // @DESC: middlewares
 app.set("view engine", "ejs");
@@ -36,6 +37,7 @@ app.use(
 console.log(process.env.SECRETE);
 require("./config/passport")(passport);
 
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

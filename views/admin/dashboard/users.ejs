@@ -1,23 +1,23 @@
 <div class="users-data">
-    <% users.map((user, index)=> { %>
-        <table>
-            <tbody>
-                <tr>
-                    <th>S/n</th>
-                    <th>Fisrt Name</th>
-                    <th>last Name</th>
-                    <th>email</th>
-                    <th>phone</th>
-                    <th>Acct No</th>
-                    <th>Course</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+    <table>
+        <tbody>
+            <tr>
+                <th>S/n</th>
+                <th>Fisrt Name</th>
+                <th>last Name</th>
+                <th>email</th>
+                <th>phone</th>
+                <th>Acct No</th>
+                <th>Course</th>
+                <th>Edit</th>
+                <th>Delete</th>
 
-                </tr>
+            </tr>
 
-                <tr>
+            <tr>
+                <% users.forEach((user, index)=> { %>
                     <td>
-                        <%= index %>
+                        <%= index + 1 %>
                     </td>
                     <td>
                         <%= user.firstName %>
@@ -38,19 +38,19 @@
                         <%= user.course %>
                     </td>
                     <td>
-                        <form action="/admin/edit<%=user.id  %> ">
-                            <button>Edit</button>
+                        <form action="/admin/user/edit/<%=user.id%>">
+                            <button type="submit">Edit</button>
                         </form>
                     </td>
                     <td>
-                        <form action="/admin/users/<%=user.id %>?_method=DELETE ">
+                        <form action="/admin/user/<%=user.id %>?_method=DELETE ">
                             <button onclick="return confirm('are you sure you want to delete')">Del</button>
                         </form>
                     </td>
-                </tr>
-            </tbody>
-        </table>
-        <% }) %>
+                    <% }) %>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
 <div class="download-info">

@@ -124,7 +124,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 
         if (newAdmin) {
           console.log(newAdmin);
-          res.render("./success", { firstName: username, layout: false });
+          req.flash("success", "Registration  successfull !!!");
         } else {
           fs.unlinkSync(req.file.path);
           error.push({ msg: "unable to register admin" });
@@ -317,7 +317,7 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
 </div>
 `
       );
-      res.render("./success", { firstName: "", layout: false });
+      req.flash("success", "password link as been sent to your email address");
     } else {
       error.push({ msg: "user not found" });
       res.render("./admin/forgetPassword", { error });
@@ -375,6 +375,7 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
           );
 
           if (updatePass) {
+            req.flash("success", "admin password successfully");
             res.redirect("/admin/dashboard");
           } else {
             error.push({ msg: "unable to update password" });
