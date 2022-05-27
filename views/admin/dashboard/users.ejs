@@ -38,13 +38,13 @@
                         <%= user.course %>
                     </td>
                     <td>
-                        <form action="">
+                        <form action="/admin/edit<%=user.id  %> ">
                             <button>Edit</button>
                         </form>
                     </td>
                     <td>
-                        <form action="">
-                            <button>Del</button>
+                        <form action="/admin/users/<%=user.id %>?_method=DELETE ">
+                            <button onclick="return confirm('are you sure you want to delete')">Del</button>
                         </form>
                     </td>
                 </tr>
