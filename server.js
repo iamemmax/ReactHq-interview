@@ -4,12 +4,13 @@ require("dotenv").config();
 const DB = require("./config/Db");
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/adminRoutes");
+const adminDashboard = require("./routes/dashboardRoutes");
 const methodOverride = require("method-override");
 const Layout = require("express-ejs-layouts");
 const session = require("express-session");
 const passport = require("passport");
-const path = require("path");
 
+// @DESC: middlewares
 app.set("view engine", "ejs");
 app.use(Layout);
 app.set("layout", "./layouts/authlayouts");
@@ -17,7 +18,6 @@ app.use(express.static(__dirname, +"asserts"));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, "asserts")));
 app.use(methodOverride("_method"));
 require("./config/passport")(passport);
 // database connection start here
@@ -42,6 +42,8 @@ app.use(passport.session());
 // user routes middlewares
 app.use("/", userRoutes);
 app.use("/admin", adminRoutes);
+app.use("/admin", adminDashboard);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`server started at port ${PORT}`);

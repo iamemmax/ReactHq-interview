@@ -1,0 +1,60 @@
+<div class="users-data">
+    <% users.map((user, index)=> { %>
+        <table>
+            <tbody>
+                <tr>
+                    <th>S/n</th>
+                    <th>Fisrt Name</th>
+                    <th>last Name</th>
+                    <th>email</th>
+                    <th>phone</th>
+                    <th>Acct No</th>
+                    <th>Course</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+
+                </tr>
+
+                <tr>
+                    <td>
+                        <%= index %>
+                    </td>
+                    <td>
+                        <%= user.firstName %>
+                    </td>
+                    <td>
+                        <%= user.lastName %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.phone %>
+                    </td>
+                    <td>
+                        <%= user.acct_No %>
+                    </td>
+                    <td>
+                        <%= user.course %>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button>Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="">
+                            <button>Del</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <% }) %>
+
+</div>
+<div class="download-info">
+    <form action="/admin/users" method="post">
+        <button type="submit">Download Pdf</button>
+    </form>
+</div>
