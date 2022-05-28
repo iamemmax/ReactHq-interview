@@ -18,6 +18,8 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   res.render("./admin/dashboard/users", {
     layout: "./layouts/dashboardLayouts",
     users,
+    deleteUser: req.flash("delete_user"),
+    updateUser: req.flash("success"),
   });
 });
 
@@ -33,10 +35,13 @@ exports.generateUserPdf = asyncHandler(async (req, res) => {
     (err, html) => {
       pdf
         .create(html, option)
-        .toFile(`./assets/docs/users/${Date.now()}`, (err, data) => {
+        .toFile("./assets/docs/users.pdf", (err, data) => {
           if (err) console.log(err);
           if (data) {
-            let dataFile = fs.readFileSync(`./assets/docs/users/${Date.now()}`);
+            let dataFile = fs.readFileSync(
+              "./admin/dashboard/users.ejs",
+              "utf8"
+            );
             res.header("content-type", "application/pdf");
             res.send(dataFile);
           }
@@ -48,6 +53,7 @@ exports.generateUserPdf = asyncHandler(async (req, res) => {
 exports.editUserPage = asyncHandler(async (req, res) => {
   let error = [];
   let user = await userSchema.findById(req.params.id);
+
   if (!user) {
     error.push({ msg: "user not found" });
     res.render("./admin/dashboard/users", {
@@ -56,10 +62,6 @@ exports.editUserPage = asyncHandler(async (req, res) => {
     });
     return;
   }
-  res.render("./admin/dashboard/editUser", {
-    layout: "./layouts/dashboardLayouts",
-    user,
-  });
 });
 
 //@DESC:update user
@@ -128,11 +130,14 @@ exports.updateUser = async (req, res) => {
 
 //@DESC: Delete user
 exports.deleteUser = asyncHandler(async (req, res) => {
-  await userSchema.findOneAndDelete({ _id: req.params.id }, (err, data) => {
-    if (err) console.log(err);
-    if (data) {
-      req.flash("success", "user deleted successfully");
-      res.redirect("/admin/users/");
-    }
-  });
+  let deleteUserInfo = await userSchema.findByIdAndDelete(req.params.id);
+  if (deleteUserInfo) {
+    req.flash("delete_user", "User deleted successfully");
+    res.redirect("/admin/users");
+  } else {
+    res.render("./admin/dashboard/users", {
+      layout: "./layouts/dashboardLayouts",
+      users,
+    });
+  }
 });

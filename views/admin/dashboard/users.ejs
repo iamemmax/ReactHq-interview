@@ -1,60 +1,85 @@
 <div class="users-data">
-    <table>
-        <tbody>
-            <tr>
-                <th>S/n</th>
-                <th>Fisrt Name</th>
-                <th>last Name</th>
-                <th>email</th>
-                <th>phone</th>
-                <th>Acct No</th>
-                <th>Course</th>
-                <th>Edit</th>
-                <th>Delete</th>
+    <% if(deleteUser.length> 0){ %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= deleteUser %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
-            </tr>
+        </div>
+        <% } %>
 
-            <tr>
-                <% users.forEach((user, index)=> { %>
-                    <td>
-                        <%= index + 1 %>
-                    </td>
-                    <td>
-                        <%= user.firstName %>
-                    </td>
-                    <td>
-                        <%= user.lastName %>
-                    </td>
-                    <td>
-                        <%= user.email %>
-                    </td>
-                    <td>
-                        <%= user.phone %>
-                    </td>
-                    <td>
-                        <%= user.acct_No %>
-                    </td>
-                    <td>
-                        <%= user.course %>
-                    </td>
-                    <td>
-                        <form action="/admin/user/edit/<%=user.id%>">
-                            <button type="submit">Edit</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="/admin/user/<%=user.id %>?_method=DELETE ">
-                            <button onclick="return confirm('are you sure you want to delete')">Del</button>
-                        </form>
-                    </td>
-                    <% }) %>
-            </tr>
-        </tbody>
-    </table>
+            <% if(updateUser.length> 0){ %>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <p>
+                        <%= updateUser %>
+
+                    </p>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+
+                <% } %>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>S/n</th>
+                                <th>First Name</th>
+                                <th>last Name</th>
+                                <th>email</th>
+                                <th>phone</th>
+                                <th>Acct No</th>
+                                <th>Course</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+
+                            </tr>
+
+                            <tr>
+                                <% users.forEach((user, index)=> { %>
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <td>
+                                        <%= user.firstName %>
+                                    </td>
+                                    <td>
+                                        <%= user.lastName %>
+                                    </td>
+                                    <td>
+                                        <%= user.email %>
+                                    </td>
+                                    <td>
+                                        <%= user.phone %>
+                                    </td>
+                                    <td>
+                                        <%= user.acct_No %>
+                                    </td>
+                                    <td>
+                                        <%= user.course %>
+                                    </td>
+                                    <td>
+                                        <form action="/admin/user/edit/<%= user.id %>?_method=PUT">
+
+                                            <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="/admin/users/delete/<%=user.id %>?_method=DELETE" method="post">
+                                            <button id="del"
+                                                onclick="return confirm('are you sure you want to delete')"><i
+                                                    class="fa fa-trash-o "></i></button>
+                                        </form>
+                                    </td>
+                                    <% }) %>
+                            </tr>
+                        </tbody>
+                    </table>
 
 </div>
-<div class="download-info">
-    <form action="/admin/users" method="post">
-        <button type="submit">Download Pdf</button>
-    </form>
-</div>
+<% if (users) { %>
+    <div class="download-info">
+        <form action="/admin/users" method="post">
+            <button type="submit">Download Pdf</button>
+        </form>
+    </div>
+    <% }%>

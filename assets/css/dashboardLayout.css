@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 * { padding: 0; margin: 0; box-sizing: border-box; }
 
 img { width: 50px; height: auto; }
@@ -24,8 +25,32 @@ img { width: 50px; height: auto; }
 
 .dashboard-container aside { grid-column: span  1; box-shadow: 1px 0px 1px rgba(7, 7, 7, 0.24); height: 88vh; padding: 20px; }
 
+.dashboard-container aside li { list-style: none; }
+
+.dashboard-container aside a { text-decoration: none; line-height: 40px; color: #000; font-family: 'Poppins', sans-serif; padding: 10px; }
+
+.dashboard-container aside a:is(:hover, .active) { text-decoration: underline; color: #F8733C; }
+
 @media screen and (max-width: 920px) { .dashboard-container aside { grid-column: span 5; padding: 20px; } }
 
 .dashboard-container main { grid-column: span 4; }
 
 @media screen and (max-width: 920px) { .dashboard-container main { grid-column: span 5; padding: 20px; } }
+
+.users-data { width: 100%; position: relative; }
+
+.users-data table { width: 90%; margin: 0px auto; text-align: center; margin-top: 2rem; }
+
+.users-data table th { text-transform: uppercase; padding: 10px; font-family: 'Poppins', sans-serif; font-size: 16px; }
+
+.users-data table td { font-family: 'Poppins', sans-serif; font-size: 14px; }
+
+.users-data table td button { border: none; outline: none; cursor: pointer; }
+
+.users-data table td button i { font-size: 16px; }
+
+.users-data table td #del { color: red; }
+
+.download-info { padding: 10px; }
+
+.download-info button { outline: none; border: 1px solid #eee; padding: 10px; font-weight: 600; margin-top: 5rem; }

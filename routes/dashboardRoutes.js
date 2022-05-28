@@ -12,6 +12,7 @@ const {
 router.get("/dashboard", protect, GetDashboard);
 
 router.route("/users").get(protect, getAllUser).post(generateUserPdf);
+
 router.route("/user/edit/:id").get(protect, editUserPage).put(updateUser);
-router.route("/user/:id").delete(deleteUser);
+router.delete("/users/delete/:id", deleteUser);
 module.exports = router;

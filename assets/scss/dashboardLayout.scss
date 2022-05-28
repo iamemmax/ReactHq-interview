@@ -1,4 +1,5 @@
 @import "./utilities//mixin";
+@import "./base//font";
 
 *{
 padding: 0;
@@ -89,6 +90,26 @@ img{
     height: 88vh;
     padding: 20px;
     
+    li{
+        list-style: none;
+    }
+    a{
+        text-decoration: none;
+        line-height: 40px;
+        color: #000;
+        font-family: 'Poppins', sans-serif;
+        padding: 10px;
+
+        &:is(:hover, .active){
+            text-decoration: underline;
+            color: #F8733C;
+        }
+    
+
+
+    }
+    
+    
     @media screen and (max-width:920px) {
         grid-column: span 5;
         padding: 20px;
@@ -107,3 +128,55 @@ img{
 
     }
 }
+
+.users-data{
+    width: 100%;
+position: relative;    
+    table{
+        width: 90%;
+        margin: 0px auto;
+        text-align: center;
+        margin-top: 2rem;
+        
+
+        th{
+            text-transform: uppercase;
+            padding: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+
+        td{
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+
+
+            button{
+                border: none;
+                outline: none;
+                cursor: pointer;
+                i{
+                    font-size: 16px;
+                   
+
+                }
+            }
+            #del{
+                color: red;
+            }
+        }
+    }
+
+}
+
+.download-info{
+    padding: 10px;
+    button{
+        outline: none;
+        border: 1px solid #eee;
+        padding: 10px;
+        font-weight: 600;
+        margin-top: 5rem;
+    }
+}
+

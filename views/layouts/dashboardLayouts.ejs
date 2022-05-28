@@ -7,13 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin dashboard</title>
     <link rel="stylesheet" href="../assets/css/dashboardLayout.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-
-
-
-
 
     <div class="dashboard-container">
         <header>
@@ -31,12 +28,12 @@
         </header>
         <aside>
             <nav>
-                <ul>
-                    <li><a href="/admin/dashboard">Dashboard</a></li>
-                    <li><a href="/admin/users">Users</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Account</a></li>
-                    <li><a href="/admin/logout">Logout</a></li>
+                <ul class="nav-ul" id="ul">
+                    <li id="link"><a href="/admin/dashboard">Dashboard</a></li>
+                    <li id="link"><a href="/admin/users">Users</a></li>
+                    <li id="link"><a href="#">Settings</a></li>
+                    <li id="link"><a href="#">Account</a></li>
+                    <li id="link"><a href="/admin/logout">Logout</a></li>
                 </ul>
             </nav>
         </aside>
@@ -44,6 +41,20 @@
             <%- body %>
         </main>
     </div>
-</body>
 
-</html>
+    <script>
+
+        let Ulnavbar = document.querySelector('#ul')
+        let myLink = document.querySelectorAll(".nav-ul a")
+        for (let i = 0; i < myLink.length; i++) {
+            const element = myLink[i];
+            if (location.href == element.href) {
+                element.className = "active"
+            }
+        }
+
+
+
+    </script>
+
+    <%- include("../partials/_footer") %>

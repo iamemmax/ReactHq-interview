@@ -11,7 +11,7 @@ const fs = require("fs");
 // @DESC: render admin signup page
 //@ACCESS: private
 exports.getSignupPage = asyncHandler(async (req, res) => {
-  res.render("./admin/addAdmin");
+  res.render("./admin/auth/addAdmin");
 });
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
@@ -22,7 +22,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (!username || !email || !password || !password2) {
     console.log("fill all");
     error.push({ msg: "all field are required" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -34,21 +34,21 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter a valid email" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
   // @DESC:check password length
   if (password.length < 5 && password2.length < 5) {
     // console.log("pass to weak");
     error.push({ msg: "password too weak" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
   // @DESC:check if password === password2
   if (password !== password2) {
     console.log("not match");
     error.push({ msg: "passwords not match" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -57,7 +57,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (!req.file) {
     console.log("pls choose a file");
     error.push({ msg: "please choose a file" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -66,7 +66,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (userNameExist) {
     console.log("username exist");
     error.push({ msg: "username already link to an existing user" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -75,7 +75,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (emailExist) {
     console.log("email exist");
     error.push({ msg: "email already link to an existing user" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -98,7 +98,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
     // @DESC if error occur when trying to upload img to cloud server
     if (!uploadImg) {
       error.push({ msg: "unable to upload profile img" });
-      res.render("./admin/addAdmin", { error });
+      res.render("./admin/auth/addAdmin", { error });
       return;
     }
 
@@ -125,17 +125,18 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
         if (newAdmin) {
           console.log(newAdmin);
           req.flash("success", "Registration  successfull !!!");
+          res.redirect("./admin/auth/login");
         } else {
           fs.unlinkSync(req.file.path);
           error.push({ msg: "unable to register admin" });
-          res.render("./admin/addAdmin", { error });
+          res.render("./admin/auth/addAdmin", { error });
           return;
         }
       });
     });
   } catch (error) {
     // error.push({ msg: "unable to register admin" });
-    res.render("./admin/addAdmin", { error: error.message });
+    res.render("./admin/auth/addAdmin", { error: error.message });
     return;
   }
 });
@@ -143,7 +144,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 // @DESC: render admin login page
 //@ACCESS: private
 exports.getLoginPage = asyncHandler(async (req, res) => {
-  res.render("./admin/LoginAdmin");
+  res.render("./admin/auth/LoginAdmin");
 });
 
 // @DESC: submit admin login page
@@ -155,7 +156,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
 
   if (!email || !password) {
     error.push({ msg: "all field are required" });
-    res.render("./admin/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", { error });
     return;
   }
 
@@ -167,7 +168,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter valid email" });
-    res.render("./admin/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", { error });
     return;
   }
 
@@ -176,20 +177,20 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
       if (err) {
         next(err);
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/LoginAdmin", { error });
+        res.render("./admin/auth/LoginAdmin", { error });
 
         return;
       }
       if (!user) {
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/LoginAdmin", { error });
+        res.render("./admin/auth/LoginAdmin", { error });
       }
 
       req.logIn(user, function (err) {
         if (err) {
           next(err);
           error.push({ msg: "Email or password not correct" });
-          res.render("./admin/LoginAdmin", { error });
+          res.render("./admin/auth/LoginAdmin", { error });
         }
 
         res.redirect("./dashboard");
@@ -197,7 +198,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
     })(req, res, next);
   } catch (error) {
     error.push({ msg: "Email or password not correct" });
-    res.render("./admin/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", { error });
     return;
   }
 });
@@ -215,7 +216,7 @@ exports.LogOutAdmin = asyncHandler(async (req, res) => {
 
 //@DESC: forget password
 exports.forgetPassword = asyncHandler(async (req, res) => {
-  res.render("./admin/forgetPassword");
+  res.render("./admin/auth/forgetPassword");
 });
 
 exports.RequestPasswordReset = asyncHandler(async (req, res) => {
@@ -223,7 +224,7 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
   let { email } = req.body;
   if (!email) {
     error.push({ msg: "please enter your register email" });
-    res.render("./admin/forgetPassword", { error });
+    res.render("./admin/auth/forgetPassword", { error });
     return;
   }
   const findUserByEmail = await adminSchema.findOne({ email: email });
@@ -320,17 +321,17 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
       req.flash("success", "password link as been sent to your email address");
     } else {
       error.push({ msg: "user not found" });
-      res.render("./admin/forgetPassword", { error });
+      res.render("./admin/auth/forgetPassword", { error });
     }
   } catch (error) {
     error.push({ msg: "something went wrong" });
-    res.render("./admin/forgetPassword", { error });
+    res.render("./admin/auth/forgetPassword", { error });
   }
 });
 
 // @DESC: reset admin password
 exports.resetPasswordPage = asyncHandler(async (req, res) => {
-  res.render("./admin/resetPassword", { id: req.params.id });
+  res.render("./admin/auth/resetPassword", { id: req.params.id });
 });
 
 exports.updateNewPassword = asyncHandler(async (req, res) => {
@@ -340,7 +341,7 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
   // @DESC:return error if user with the above id not found
   if (!user) {
     error.push({ msg: "invalid link" });
-    res.render("./admin/resetPassword", { error });
+    res.render("./admin/auth/resetPassword", { error });
     return;
   }
 
@@ -349,14 +350,14 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
 
     if (password.length < 5 && password2.length < 5) {
       error.push({ msg: "password too weak" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
       return;
     }
     // @DESC:check if password === password2
     if (password !== password2) {
       console.log("not match");
       error.push({ msg: "passwords not match" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
       return;
     }
 
@@ -376,16 +377,16 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
 
           if (updatePass) {
             req.flash("success", "admin password successfully");
-            res.redirect("/admin/dashboard");
+            res.redirect("/admin/auth/login");
           } else {
             error.push({ msg: "unable to update password" });
-            res.render("./admin/resetPassword", { error });
+            res.render("./admin/auth/resetPassword", { error });
           }
         });
       });
     } catch (error) {
       error.push({ msg: "something went wrong" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
     }
   }
 });
