@@ -8,7 +8,7 @@
         <% } %>
 
             <% if(updateUser.length> 0){ %>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <p>
                         <%= updateUser %>
 
@@ -20,109 +20,111 @@
 
                 <% } %>
                     <% if (users.length> 0) { %>
-                        <div class="table" id="users-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>S/n</th>
-                                        <th>First Name</th>
-                                        <th>last Name</th>
-                                        <th>email</th>
-                                        <th>phone</th>
-                                        <th>Acct No</th>
-                                        <th>Course</th>
-                                        <th>Edit</th>
-                                        <th>Delete</th>
+                        <table id="table">
+                            <thead>
+                                <tr>
+                                    <th>S/n</th>
+                                    <th>First Name</th>
+                                    <th>last Name</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                    <th>Acct No</th>
+                                    <th>Course</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
 
-                                    </tr>
-                                </thead>
-                                <br>
-                                <tbody>
+                                </tr>
+                            </thead>
+                            <br>
+                            <tbody>
 
 
-                                    <tr>
-                                        <% users.forEach((user, index)=> { %>
-                                            <td>
-                                                <%= index + 1 %>
-                                            </td>
-                                            <td>
-                                                <%= user.firstName %>
-                                            </td>
-                                            <td>
-                                                <%= user.lastName %>
-                                            </td>
-                                            <td>
-                                                <%= user.email %>
-                                            </td>
-                                            <td>
-                                                <%= user.phone %>
-                                            </td>
-                                            <td>
-                                                <%= user.acct_No %>
-                                            </td>
-                                            <td>
-                                                <%= user.course %>
-                                            </td>
+                                <tr>
+                                    <% users.forEach((user, index)=> { %>
+                                        <td>
+                                            <%= index + 1 %>
+                                        </td>
+                                        <td>
+                                            <%= user.firstName %>
+                                        </td>
+                                        <td>
+                                            <%= user.lastName %>
+                                        </td>
+                                        <td>
+                                            <%= user.email %>
+                                        </td>
+                                        <td>
+                                            <%= user.phone %>
+                                        </td>
+                                        <td>
+                                            <%= user.acct_No %>
+                                        </td>
+                                        <td>
+                                            <%= user.course %>
+                                        </td>
+                                        <td>
+                                            <form action="/admin/users/<%= user.id %> ">
 
-                                            <td>
-                                                <form action="/admin/users/<%= user.id %> ">
+                                                <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
+                                            </form>
 
-                                                    <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
-                                                </form>
+                                        </td>
+                                        <td>
+                                            <form action="/admin/users/delete/<%=user.id %>?_method=DELETE"
+                                                method="post">
+                                                <button id="del"
+                                                    onclick="return confirm('are you sure you want to delete')"><i
+                                                        class="fa fa-trash-o "></i></button>
+                                            </form>
+                                        </td>
+                                        <% }) %>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                                            </td>
-                                            <td>
-                                                <form action="/admin/users/delete/<%=user.id %>?_method=DELETE"
-                                                    method="post">
-                                                    <button id="del"
-                                                        onclick="return confirm('are you sure you want to delete')"><i
-                                                            class="fa fa-trash-o "></i></button>
-                                                </form>
-                                            </td>
-                                            <% }) %>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <p class="lead">
+                            <button id="json" class="btn btn-primary">TO JSON</button>
+                            <button id="csv" class="btn btn-info">TO CSV</button>
+                            <button id="pdf" class="btn btn-danger">TO PDF</button>
+                            <button id="txt" class="btn btn-success">TO TXT</button>
+                        </p>
 
                         <% if (users) { %>
-
-                            <div class="download-info">
-                                <button onclick="createPdf()" type="submit">Download Pdf</button>
-
-                            </div>
-                            <% }%>
-
-
-                                <% } else { %>
-                                    <p style="text-align:center;padding:10px;font-size:30px">Empty</p>
-                                    <% } %>
-
-
-                                        <div id="emma">
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit esse ex
-                                            alias accusamus consectetur consequuntur praesentium recusandae voluptatem
-                                            laborum totam iste dolore, autem rem architecto a tempore at? Quae quam,
-                                            explicabo eveniet nam aut aliquam blanditiis! Cumque ab excepturi magnam
-                                            mollitia, eum nam ea nisi modi nemo hic odit quidem, facilis voluptas
-                                            debitis quos alias? Ratione perferendis, veniam non maiores earum voluptatem
-                                            voluptas neque inventore officiis veritatis natus, beatae reprehenderit,
-                                            saepe incidunt suscipit cupiditate? Ipsum qui modi officia nihil natus iste
-                                            voluptatum, esse corrupti officiis ipsam, praesentium inventore ab ullam
-                                            saepe laborum iusto pariatur excepturi, fuga possimus amet recusandae vel.
-                                        </div>
-
-
+                            <form action="/admin/users/download">
+                                <div class="download-info">
+                                    <button type="submit">Download Pdf</button>
+                            </form>
 </div>
+<% }%>
 
 
-<script>
+    <% } else { %>
+        <p style="text-align:center;padding:10px;font-size:30px">Empty</p>
+        <% } %>
 
 
-    // New Promise-based usage:
-    function createPdf() {
-        var element = document.getElementById('emma');
-        var worker = html2pdf().from(element).save();
-        console.log(element);
-    }
-</script>
+
+
+            </div>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+
+            <script src="src/tableHTMLExport.js"></script>
+
+
+            <script>
+                $("#json").on("click", function () {
+                    $("#example").tableHTMLExport({
+                        type: "json",
+                        filename: "sample.json",
+                    });
+                });
+                $("#csv").on("click", function () {
+                    $("#table").tableHTMLExport({ type: "csv", filename: "sample.csv" });
+                });
+                $("#pdf").on("click", function () {
+                    $("#table").tableHTMLExport({ type: "pdf", filename: "sample.pdf" });
+                });
+
+            </script>

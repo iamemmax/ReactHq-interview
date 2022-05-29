@@ -13,10 +13,28 @@ exports.getHomePage = (req, res) => {
 exports.submitForm = asyncHandler(async (req, res) => {
   let error = [];
 
-  let { firstName, lastName, email, phone, acct_No, course } = req.body;
+  let {
+    firstName,
+    lastName,
+    email,
+    phone,
+    acct_No,
+    course,
+    how_you_hear_abt_us,
+    new_to_mint_act,
+  } = req.body;
 
   //  @desc check if user fill all fields
-  if (!firstName || !lastName || !email || !phone || !acct_No || !course) {
+  if (
+    !firstName ||
+    !lastName ||
+    !email ||
+    !phone ||
+    !acct_No ||
+    !course ||
+    !how_you_hear_abt_us ||
+    !new_to_mint_act
+  ) {
     error.push({ msg: "all field are required" });
     res.render("index", { error, layout: false });
 
@@ -77,6 +95,8 @@ exports.submitForm = asyncHandler(async (req, res) => {
           acct_No,
           phone,
           course,
+          how_you_hear_abt_us,
+          new_to_mint_act,
         }).save();
 
         if (newUser) {

@@ -164,11 +164,11 @@
 
         <!--------- Footer area End --------->
 
-        <script src="../assets/js/jquery.min.js"></script>
-        <script src="../assets/js/bootstrap.min.js"></script>
-        <script src="../assets/js/popper.js"></script>
-        <script src="../assets/js/aos.js"></script>
-        <script src="../assets/js/main.js"></script>
+        <script src="../../assets/js/jquery.min.js"></script>
+        <script src="../../assets/js/bootstrap.min.js"></script>
+        <script src="../../assets/js/popper.js"></script>
+        <script src="../../assets/js/aos.js"></script>
+        <script src="../../assets/js/main.js"></script>
     </div>
 
 
@@ -178,6 +178,14 @@
         const menu = document.querySelector(".menu")
         profile.addEventListener("click", (e) => {
             menu.classList.toggle("showMenu")
+        })
+
+        const alert = document.querySelector(".alert")
+        window.addEventListener("load", () => {
+            setInterval(() => {
+                alert.style.display = "none"
+            }, 3000)
+
         })
     </script>
 </body>

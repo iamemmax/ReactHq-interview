@@ -44,15 +44,21 @@ exports.getPdfPage = async (req, res) => {
 
 exports.generateUserPdf = asyncHandler(async (req, res) => {
   const option = { format: "A4" };
+  let users = await userSchema.find().sort({ createdAt: "-1" });
+
   // let datafile = fs.readFileSync("asset/docs/users/users.pdf", "utf-8");
-  res.render("download", { users: req.body.pdf }, (err, html) => {
+  res.render("download", { users }, (err, html) => {
     pdf
       .create(html, option)
       .toFile("./assets/docs/users/users.pdf", (err, data) => {
         if (err) {
           console.log(err);
         } else {
-          let datafile = fs.renderFile("./assets/docs/users/users.pdf");
+          let datafile = fs.renderFile(
+            "./assets/docs/users/users.pdf",
+            "utf-8"
+          );
+
           res.send(datafile);
         }
       });
@@ -106,7 +112,7 @@ exports.updateUser = async (req, res) => {
         if (err) {
           error.push({ msg: "unable to update user" });
           res.render("./admin/dashboard/editUser", {
-            layout: "./layouts/dashboardLayouts",
+            // layout: "./layouts/dashboardLayouts",
             user,
             error,
           });

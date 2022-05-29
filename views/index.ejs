@@ -160,9 +160,36 @@
                       </div>
                       <div class="col-sm-12">
                         <div class="form__input">
-                          <input type="course" class="form-control" placeholder="Select a Course of Choice"
-                            name="course" />
+                          <select class="form-control" name="course" aria-label="Default select example">
+                            <option selected>select a course of choice</option>
+                            <option value="Frontend Dev">Frontend Dev</option>
+                            <option value="Product Design (Ui/UX)">Product Design (Ui/UX)</option>
+                            <option value="Project management">Project management</option>
+                            <option value="Wordpress">Wordpress</option>
+                          </select>
                         </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="form__input">
+
+
+
+                          <select class="form-control" name="how_you_hear_abt_us" aria-label="Default select example">
+                            <option selected>How did you hear about us?</option>
+                            <option value="Linkedin">Linkedin</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="A Friend">A Friend</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-6">
+                        <select class="form-select" name="new_to_mint_act" aria-label="Default select example">
+                          <option selected>Are you New to Mintyn Account holder?</option>
+                          <option value="yes">Yes</option>
+                          <option value="no">No</option>
+                        </select>
                       </div>
                       <div class="col-sm-12">
                         <div class="form__input">
@@ -170,6 +197,8 @@
                             name="acct_No" />
                         </div>
                       </div>
+
+
                       <div class="col-12">
                         <div class="form__submit pt-2">
                           <button class="common-btn w-100" type="submit">
