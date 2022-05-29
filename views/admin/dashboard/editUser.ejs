@@ -1,8 +1,8 @@
 <section class="registration">
     <div class="container">
         <div class="registration__form" id="signup">
-            <form action="/admin/user/edit/<%=user.id %>?_method=PUT " method="post">
-
+            <form action="/admin/users/<%=user.id %>?_method=PUT" method="post">
+                <h2>EDIT USERS</h2>
                 <% if(typeof error !=="undefined" ){ %>
                     <%error.forEach(errors=>{%>
 

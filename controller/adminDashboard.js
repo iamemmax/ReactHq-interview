@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const ejs = require("ejs");
 const userSchema = require("../model/UserSchema");
 const pdf = require("html-pdf");
 const fs = require("fs");
@@ -23,47 +24,40 @@ exports.getAllUser = asyncHandler(async (req, res) => {
   });
 });
 
-exports.generateUserPdf = asyncHandler(async (req, res) => {
-  let users = await userSchema.find().sort({ createdAt: "-1" });
-  const option = { format: "A4" };
-  res.render(
-    "./admin/dashboard/users",
-    {
-      layout: "./layouts/dashboardLayouts",
-      users,
-    },
-    (err, html) => {
-      pdf
-        .create(html, option)
-        .toFile("./assets/docs/users.pdf", (err, data) => {
-          if (err) console.log(err);
-          if (data) {
-            let dataFile = fs.readFileSync(
-              "./admin/dashboard/users.ejs",
-              "utf8"
-            );
-            res.header("content-type", "application/pdf");
-            res.send(dataFile);
-          }
-        });
-    }
-  );
-});
-
 exports.editUserPage = asyncHandler(async (req, res) => {
-  let error = [];
   let user = await userSchema.findById(req.params.id);
 
-  if (!user) {
-    error.push({ msg: "user not found" });
-    res.render("./admin/dashboard/users", {
-      layout: "./layouts/dashboardLayouts",
-      users,
-    });
-    return;
-  }
+  res.render("./admin/dashboard/editUser", {
+    // layout: "./layouts/dashboardLayouts",
+    user,
+  });
 });
 
+exports.getPdfPage = async (req, res) => {
+  let users = await userSchema.find().sort({ createdAt: "-1" });
+
+  res.render("./admin/dashboard/download", {
+    layout: false,
+    users,
+  });
+};
+
+exports.generateUserPdf = asyncHandler(async (req, res) => {
+  const option = { format: "A4" };
+  // let datafile = fs.readFileSync("asset/docs/users/users.pdf", "utf-8");
+  res.render("download", { users: req.body.pdf }, (err, html) => {
+    pdf
+      .create(html, option)
+      .toFile("./assets/docs/users/users.pdf", (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          let datafile = fs.renderFile("./assets/docs/users/users.pdf");
+          res.send(datafile);
+        }
+      });
+  });
+});
 //@DESC:update user
 exports.updateUser = async (req, res) => {
   let user = await userSchema.findById(req.params.id);
@@ -140,4 +134,25 @@ exports.deleteUser = asyncHandler(async (req, res) => {
       users,
     });
   }
+});
+
+//@DESC search user
+exports.searchUser = asyncHandler(async (req, res) => {
+  let keyword = req.query.user
+    ? {
+        $or: [
+          { firstName: { $regex: req.query.user, $options: "i" } },
+          { lastName: { $regex: req.query.user, $options: "i" } },
+          { email: { $regex: req.query.user, $options: "i" } },
+          // { acct_No: { $regex: req.query.user.toString() } },
+        ],
+      }
+    : {};
+  const users = await userSchema.find(keyword);
+  console.log(users);
+
+  res.render("./admin/dashboard/search", {
+    layout: "./layouts/dashboardLayouts",
+    users,
+  });
 });

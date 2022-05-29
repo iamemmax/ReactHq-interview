@@ -27,7 +27,7 @@ router.route("/forget-password").get(forgetPassword).post(RequestPasswordReset);
 
 // @DESC updating new password
 router
-  .route("/reset-password/:id")
+  .route("/reset-password/:id/:token")
   .get(resetPasswordPage)
   .put(updateNewPassword);
 // router.

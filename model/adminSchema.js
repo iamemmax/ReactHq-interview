@@ -36,7 +36,9 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // token
+  token: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("admins", adminSchema);

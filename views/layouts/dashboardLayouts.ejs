@@ -6,8 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin dashboard</title>
+    <link href="../../assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../assets/css/all.min.css" rel="stylesheet" />
+    <link href="../../assets/css/fontawesome.css" rel="stylesheet" />
+    <link href="../../assets/css/aos.css" rel="stylesheet" />
+    <link href="../../assets/css/style.css" rel="stylesheet" />
+    <link href="../../assets/css/responsive.css" rel="stylesheet" />
     <link rel="stylesheet" href="../assets/css/dashboardLayout.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 
 <body>
@@ -19,11 +29,21 @@
 
             </div>
             <div class="search">
-                <input type="text">
+                <form action="/admin/search">
+
+                    <input type="text" name="user" placeholder="Search users">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
             </div>
             <div class="profile">
                 <img src="../assets/img/img-2.png" alt="">
                 <h2>Emmax</h2>
+
+                <div class="menu">
+                    <li id="link"><a href="#">Settings</a></li>
+                    <li id="link"><a href="#">Account</a></li>
+                    <li id="link"><a href="/admin/logout">Logout</a></li>
+                </div>
             </div>
         </header>
         <aside>
@@ -31,7 +51,6 @@
                 <ul class="nav-ul" id="ul">
                     <li id="link"><a href="/admin/dashboard">Dashboard</a></li>
                     <li id="link"><a href="/admin/users">Users</a></li>
-                    <li id="link"><a href="#">Settings</a></li>
                     <li id="link"><a href="#">Account</a></li>
                     <li id="link"><a href="/admin/logout">Logout</a></li>
                 </ul>
@@ -42,19 +61,125 @@
         </main>
     </div>
 
-    <script>
+    <div class="footer">
 
-        let Ulnavbar = document.querySelector('#ul')
-        let myLink = document.querySelectorAll(".nav-ul a")
-        for (let i = 0; i < myLink.length; i++) {
-            const element = myLink[i];
-            if (location.href == element.href) {
-                element.className = "active"
+        <footer class="footer">
+            <div class="container">
+                <div class="footer__main">
+                    <div class="footer__logo">
+                        <a href="#"><img src=".assets/img/logos/logo-footer.svg" alt="" /></a>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-8 col-md-12">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="footer__item">
+                                        <h4>Quick Links</h4>
+                                        <ul>
+                                            <li><a href="#">Build with us</a></li>
+                                            <li><a href="#">Hire Talents</a></li>
+                                            <li><a href="#">FAQ</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="footer__item">
+                                        <h4>Company</h4>
+                                        <ul>
+                                            <li><a href="#">Join our team</a></li>
+                                            <li><a href="#">Events</a></li>
+                                            <li><a href="#">Contact us</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="footer__item">
+                                        <h4>Contact</h4>
+                                        <ul>
+                                            <li>
+                                                <a href="mailto:hi@reactng.com">hi@reactng.com</a>
+                                            </li>
+                                            <li>
+                                                <a href="tel:+234-915-467-5121">+234-915-467-5121</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="footer__item">
+                                        <h4>Legal</h4>
+                                        <ul>
+                                            <li><a href="#">Privacy policy</a></li>
+                                            <li><a href="#">Terms of service</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="footer__item">
+                                <h4>Subscribe</h4>
+                                <ul>
+                                    <li>Stay informed, subscribe to our newsletter</li>
+                                </ul>
+                                <div class="footer__form">
+                                    <form action="">
+                                        <input type="email" placeholder="Enter your email address" />
+                                        <button class="common-btn btn-bordered">Subscribe!</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer__bottom d-flex">
+                    <p>
+                        <span>&copy;</span> 2022 ReactHQ- ReactHQ, Sprint and Spaces are
+                        Trademarks of Hydratech Software Solutions Ltd. Lagos
+                    </p>
+                    <div class="footer__social d-flex align-items-center">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+
+            let Ulnavbar = document.querySelector('#ul')
+            let myLink = document.querySelectorAll(".nav-ul a")
+            for (let i = 0; i < myLink.length; i++) {
+                const element = myLink[i];
+                if (location.href == element.href) {
+                    element.className = "active"
+                }
             }
-        }
 
 
 
+        </script>
+
+        <!--------- Footer area End --------->
+
+        <script src="../assets/js/jquery.min.js"></script>
+        <script src="../assets/js/bootstrap.min.js"></script>
+        <script src="../assets/js/popper.js"></script>
+        <script src="../assets/js/aos.js"></script>
+        <script src="../assets/js/main.js"></script>
+    </div>
+
+
+
+    <script>
+        const profile = document.querySelector(".profile")
+        const menu = document.querySelector(".menu")
+        profile.addEventListener("click", (e) => {
+            menu.classList.toggle("showMenu")
+        })
     </script>
+</body>
 
-    <%- include("../partials/_footer") %>
+</html>

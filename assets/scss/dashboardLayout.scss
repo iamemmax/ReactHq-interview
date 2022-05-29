@@ -31,6 +31,7 @@ img{
         justify-items: stretch;
         align-items: center;
         column-gap: 20px;
+        // border: 2px solid red;
 
         
         .logo{
@@ -48,8 +49,26 @@ img{
             justify-items: center;
             display: flex;
 
-            input{
-                width: 70%;
+            form{
+                width: 100%;
+                position: relative;
+                button{
+                    position: absolute;
+                    right: 1rem;
+                    top: 50%;
+                    cursor: pointer;
+                    transform: translateY(-50%);
+                    border: none;
+                    outline: none;
+                        background-color: transparent;
+                    i{
+                        font-size: 20px;
+                        background-color: transparent;
+
+                    }
+                }
+                input{
+                    width: 100%;
                 margin: 0px auto;
                 padding: 5px;
                 height: 40px;
@@ -58,9 +77,11 @@ img{
                 outline: none;
                 padding: 0 20px;
                 @media screen and (max-width:900px) {
-                width: 100%;
+
+                    width: 100%;
                 }
             }
+        }
         }
         .profile{
             grid-column: span 1;
@@ -69,21 +90,55 @@ img{
             align-items: center;
             justify-content: end;
             cursor: pointer;
+            position: relative;
+
 
             img{
+              
                 width: 40px;
                 height: 40px;
                 border-radius: 50%;
             }
             h2{
                 font-size: 14px;
+                margin-top: 1rem;
                 font-weight: 600;
                 font-family: sans-serif;
                 padding-left: 5px;
+                color: #eee;
+            }
+            .menu{
+                position: absolute;
+                right: 0;
+                top: 4rem;
+                background-color: #eee;
+                padding: 10px 20px;
+                border-radius: 10px;
+                transform: scale(0);
+                transition: transform .5s ease-in-out;
+
+                li{
+                    list-style: none;
+
+                }
+                a{
+                    text-decoration: none;
+                    color: #111;
+                 font-family:'Poppins', sans-serif;
+                 line-height: 30px;
+                 &:hover{
+                     color: #F8733C;
+                 }
+                }
             }
         }
        
     }
+    .showMenu{
+        transform: scale(1) !important;
+        transition: transform .5s ease-in-out;
+    }
+
     aside{
     grid-column: span  1;
     box-shadow: 1px 0px 1px   rgba(7, 7, 7, 0.24);
@@ -129,26 +184,47 @@ img{
     }
 }
 
+.footer{
+grid-column: span 5;
+display: none;
+}
 .users-data{
     width: 100%;
 position: relative;    
+height: 80vh;
+
     table{
         width: 90%;
+        position: relative;
         margin: 0px auto;
         text-align: center;
-        margin-top: 2rem;
-        
+        border-collapse: collapse;
+            width: 100%;
 
-        th{
+        
+        thead{
+            background-color: #eee;
+            padding: 10px;
+            
+        }
+        tbody{
+            margin-top: 10px !important;
+            padding: 0 10px;
+            
+        }
+
+         th{
             text-transform: uppercase;
             padding: 10px;
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
+            
         }
 
         td{
             font-family: 'Poppins', sans-serif;
             font-size: 14px;
+            padding: 20px;
 
 
             button{

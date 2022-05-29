@@ -1,0 +1,65 @@
+<div class="users-data">
+    <h3 style="padding: 10px;text-align: center;">
+        <%= users.length %> users found
+    </h3>
+    <table>
+        <thead>
+            <tr>
+                <th>S/n</th>
+                <th>First Name</th>
+                <th>last Name</th>
+                <th>email</th>
+                <th>phone</th>
+                <th>Acct No</th>
+                <th>Course</th>
+                <th>Edit</th>
+                <th>Delete</th>
+
+            </tr>
+        </thead>
+        <br>
+        <tbody>
+
+
+            <tr>
+                <% users.forEach((user, index)=> { %>
+                    <td>
+                        <%= index + 1 %>
+                    </td>
+                    <td>
+                        <%= user.firstName %>
+                    </td>
+                    <td>
+                        <%= user.lastName %>
+                    </td>
+                    <td>
+                        <%= user.email %>
+                    </td>
+                    <td>
+                        <%= user.phone %>
+                    </td>
+                    <td>
+                        <%= user.acct_No %>
+                    </td>
+                    <td>
+                        <%= user.course %>
+                    </td>
+
+                    <td>
+                        <form action="/admin/users/<%= user.id %> ">
+
+                            <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
+                        </form>
+
+                    </td>
+                    <td>
+                        <form action="/admin/users/delete/<%=user.id %>?_method=DELETE" method="post">
+                            <button id="del" onclick="return confirm('are you sure you want to delete')"><i
+                                    class="fa fa-trash-o "></i></button>
+                        </form>
+                    </td>
+                    <% }) %>
+            </tr>
+        </tbody>
+    </table>
+</div>

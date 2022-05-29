@@ -19,67 +19,110 @@
 
 
                 <% } %>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>S/n</th>
-                                <th>First Name</th>
-                                <th>last Name</th>
-                                <th>email</th>
-                                <th>phone</th>
-                                <th>Acct No</th>
-                                <th>Course</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                    <% if (users.length> 0) { %>
+                        <div class="table" id="users-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>S/n</th>
+                                        <th>First Name</th>
+                                        <th>last Name</th>
+                                        <th>email</th>
+                                        <th>phone</th>
+                                        <th>Acct No</th>
+                                        <th>Course</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
 
-                            </tr>
+                                    </tr>
+                                </thead>
+                                <br>
+                                <tbody>
 
-                            <tr>
-                                <% users.forEach((user, index)=> { %>
-                                    <td>
-                                        <%= index + 1 %>
-                                    </td>
-                                    <td>
-                                        <%= user.firstName %>
-                                    </td>
-                                    <td>
-                                        <%= user.lastName %>
-                                    </td>
-                                    <td>
-                                        <%= user.email %>
-                                    </td>
-                                    <td>
-                                        <%= user.phone %>
-                                    </td>
-                                    <td>
-                                        <%= user.acct_No %>
-                                    </td>
-                                    <td>
-                                        <%= user.course %>
-                                    </td>
-                                    <td>
-                                        <form action="/admin/user/edit/<%= user.id %>?_method=PUT">
 
-                                            <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form action="/admin/users/delete/<%=user.id %>?_method=DELETE" method="post">
-                                            <button id="del"
-                                                onclick="return confirm('are you sure you want to delete')"><i
-                                                    class="fa fa-trash-o "></i></button>
-                                        </form>
-                                    </td>
-                                    <% }) %>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <tr>
+                                        <% users.forEach((user, index)=> { %>
+                                            <td>
+                                                <%= index + 1 %>
+                                            </td>
+                                            <td>
+                                                <%= user.firstName %>
+                                            </td>
+                                            <td>
+                                                <%= user.lastName %>
+                                            </td>
+                                            <td>
+                                                <%= user.email %>
+                                            </td>
+                                            <td>
+                                                <%= user.phone %>
+                                            </td>
+                                            <td>
+                                                <%= user.acct_No %>
+                                            </td>
+                                            <td>
+                                                <%= user.course %>
+                                            </td>
+
+                                            <td>
+                                                <form action="/admin/users/<%= user.id %> ">
+
+                                                    <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
+                                                </form>
+
+                                            </td>
+                                            <td>
+                                                <form action="/admin/users/delete/<%=user.id %>?_method=DELETE"
+                                                    method="post">
+                                                    <button id="del"
+                                                        onclick="return confirm('are you sure you want to delete')"><i
+                                                            class="fa fa-trash-o "></i></button>
+                                                </form>
+                                            </td>
+                                            <% }) %>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <% if (users) { %>
+
+                            <div class="download-info">
+                                <button onclick="createPdf()" type="submit">Download Pdf</button>
+
+                            </div>
+                            <% }%>
+
+
+                                <% } else { %>
+                                    <p style="text-align:center;padding:10px;font-size:30px">Empty</p>
+                                    <% } %>
+
+
+                                        <div id="emma">
+                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit esse ex
+                                            alias accusamus consectetur consequuntur praesentium recusandae voluptatem
+                                            laborum totam iste dolore, autem rem architecto a tempore at? Quae quam,
+                                            explicabo eveniet nam aut aliquam blanditiis! Cumque ab excepturi magnam
+                                            mollitia, eum nam ea nisi modi nemo hic odit quidem, facilis voluptas
+                                            debitis quos alias? Ratione perferendis, veniam non maiores earum voluptatem
+                                            voluptas neque inventore officiis veritatis natus, beatae reprehenderit,
+                                            saepe incidunt suscipit cupiditate? Ipsum qui modi officia nihil natus iste
+                                            voluptatum, esse corrupti officiis ipsam, praesentium inventore ab ullam
+                                            saepe laborum iusto pariatur excepturi, fuga possimus amet recusandae vel.
+                                        </div>
+
 
 </div>
-<% if (users) { %>
-    <div class="download-info">
-        <form action="/admin/users" method="post">
-            <button type="submit">Download Pdf</button>
-        </form>
-    </div>
-    <% }%>
+
+
+<script>
+
+
+    // New Promise-based usage:
+    function createPdf() {
+        var element = document.getElementById('emma');
+        var worker = html2pdf().from(element).save();
+        console.log(element);
+    }
+</script>

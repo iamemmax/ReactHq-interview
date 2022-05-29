@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const sharp = require("sharp");
 const passport = require("passport");
 const sendEmail = require("../config/email");
-// const crypto = require("crypto");
+const crypto = require("crypto");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
 
@@ -157,7 +157,6 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   if (!email || !password) {
     error.push({ msg: "all field are required" });
     res.render("./admin/auth/LoginAdmin", { error });
-    return;
   }
 
   // check if user enter valid email
@@ -169,7 +168,6 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   if (!validateEmail(email)) {
     error.push({ msg: "please enter valid email" });
     res.render("./admin/auth/LoginAdmin", { error });
-    return;
   }
 
   try {
@@ -178,8 +176,6 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
         next(err);
         error.push({ msg: "Email or password not correct" });
         res.render("./admin/auth/LoginAdmin", { error });
-
-        return;
       }
       if (!user) {
         error.push({ msg: "Email or password not correct" });
@@ -191,15 +187,14 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
           next(err);
           error.push({ msg: "Email or password not correct" });
           res.render("./admin/auth/LoginAdmin", { error });
+        } else {
+          res.redirect("/admin/dashboard");
         }
-
-        res.redirect("./dashboard");
       });
     })(req, res, next);
   } catch (error) {
     error.push({ msg: "Email or password not correct" });
     res.render("./admin/auth/LoginAdmin", { error });
-    return;
   }
 });
 
@@ -230,12 +225,12 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
   const findUserByEmail = await adminSchema.findOne({ email: email });
   try {
     if (findUserByEmail) {
-      // crypto.randomBytes(48, async (err, buffer) => {
-      //   let token = buffer.toString("hex");
-      sendEmail(
-        email,
-        "Reset Password ",
-        `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
+      crypto.randomBytes(48, async (err, buffer) => {
+        let token = buffer.toString("hex");
+        sendEmail(
+          email,
+          "Reset Password ",
+          `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
   <style>
     @media screen and (max-width: 768px) {
       header {
@@ -287,9 +282,10 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
     <br style="box-sizing: border-box;">
     <br style="box-sizing: border-box;"> Password Reset
     <br style="box-sizing: border-box;">
-    <br style="box-sizing: border-box;"> follow this link to reset your password <a href="localhost:5000/admin/reset-password/${findUserByEmail._id}">Reset Password</a>
+    <br style="box-sizing: border-box;"> follow this link to reset your password 
+
      <br>
-     
+      <a href="http://localhost:5000/admin/reset-password/${findUserByEmail._id}/${token}">Reset Password</a> 
    
     
     <br style="box-sizing: border-box;">
@@ -317,8 +313,20 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
 </div>
 </div>
 `
-      );
-      req.flash("success", "password link as been sent to your email address");
+        );
+        let updateToken = await adminSchema.findByIdAndUpdate(
+          { _id: findUserByEmail.id },
+          { $set: { token: token } },
+          { new: true }
+        );
+        if (updateToken) {
+          req.flash(
+            "success",
+            "password link as been sent to your email address"
+          );
+          res.redirect("/admin/forget-password");
+        }
+      });
     } else {
       error.push({ msg: "user not found" });
       res.render("./admin/auth/forgetPassword", { error });
@@ -331,12 +339,26 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
 
 // @DESC: reset admin password
 exports.resetPasswordPage = asyncHandler(async (req, res) => {
-  res.render("./admin/auth/resetPassword", { id: req.params.id });
+  // res.render("./admin/auth/resetPassword", {
+  //   id: req.params.id,
+  //   token: req.params.token,
+  // });
+  res.render("./admin/auth/resetPassword", {
+    id: req.params.id,
+    token: req.params.token,
+  });
 });
 
 exports.updateNewPassword = asyncHandler(async (req, res) => {
   let error = [];
-  const user = await adminSchema.findById({ _id: req.params.id });
+  const user = await adminSchema.find({
+    $and: [
+      {
+        _id: req.params.id,
+        token: req.params.token,
+      },
+    ],
+  });
 
   // @DESC:return error if user with the above id not found
   if (!user) {
@@ -376,8 +398,13 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
           );
 
           if (updatePass) {
-            req.flash("success", "admin password successfully");
-            res.redirect("/admin/auth/login");
+            await adminSchema.findByIdAndUpdate(
+              { _id: req.params.id },
+              { $set: { token: "" } },
+              { new: true }
+            );
+            req.flash("success", "admin password  change successfully");
+            res.redirect("/admin/login");
           } else {
             error.push({ msg: "unable to update password" });
             res.render("./admin/auth/resetPassword", { error });
