@@ -124,8 +124,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
         }).save();
 
         if (newAdmin) {
-          console.log(newAdmin);
-          req.flash("success", "Registration  successfull !!!");
+          req.flash("reg_success", "Registration successfull !!!");
           res.redirect("/admin/login");
         } else {
           fs.unlinkSync(req.file.path);
@@ -145,7 +144,9 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 // @DESC: render admin login page
 //@ACCESS: private
 exports.getLoginPage = asyncHandler(async (req, res) => {
-  res.render("./admin/auth/LoginAdmin");
+  res.render("./admin/auth/LoginAdmin", {
+    successReg: req.flash("reg_success"),
+  });
 });
 
 // @DESC: submit admin login page
@@ -157,7 +158,10 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
 
   if (!email || !password) {
     error.push({ msg: "all field are required" });
-    res.render("./admin/auth/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", {
+      error,
+      successReg: req.flash("reg_success"),
+    });
   }
 
   // check if user enter valid email
@@ -168,7 +172,10 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter valid email" });
-    res.render("./admin/auth/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", {
+      error,
+      successReg: req.flash("reg_success"),
+    });
   }
 
   try {
@@ -176,18 +183,27 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
       if (err) {
         next(err);
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/auth/LoginAdmin", { error });
+        res.render("./admin/auth/LoginAdmin", {
+          error,
+          successReg: req.flash("reg_success"),
+        });
       }
       if (!user) {
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/auth/LoginAdmin", { error });
+        res.render("./admin/auth/LoginAdmin", {
+          error,
+          successReg: req.flash("reg_success"),
+        });
       }
 
       req.logIn(user, function (err) {
         if (err) {
           next(err);
           error.push({ msg: "Email or password not correct" });
-          res.render("./admin/auth/LoginAdmin", { error });
+          res.render("./admin/auth/LoginAdmin", {
+            error,
+            successReg: req.flash("reg_success"),
+          });
         } else {
           res.redirect("/admin/dashboard");
         }
@@ -195,7 +211,10 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
     })(req, res, next);
   } catch (error) {
     error.push({ msg: "Email or password not correct" });
-    res.render("./admin/auth/LoginAdmin", { error });
+    res.render("./admin/auth/LoginAdmin", {
+      error,
+      successReg: req.flash("reg_success"),
+    });
   }
 });
 
@@ -487,5 +506,111 @@ exports.updateAdminInfo = asyncHandler(async (req, res) => {
     }
   } catch (error) {
     console.log("something went wrong");
+  }
+});
+
+//@DESC:Update Admin password
+exports.change_admin_password_page = asyncHandler(async (req, res) => {
+  let user = await adminSchema.findById(req.params.id);
+
+  res.render("./admin/auth/change_password", {
+    admin: user,
+    layout: "./layouts/dashboardLayouts",
+  });
+});
+
+exports.Change_admin_Password = asyncHandler(async (req, res) => {
+  let error = [];
+  const admin = await adminSchema.findById(req.params.id);
+  let { oldpassword, password, password1 } = req.body;
+  console.log(oldpassword, password, password1);
+  if (!oldpassword || !password || !password1) {
+    error.push({ msg: "all field are required" });
+    res.render("./admin/auth/change_password", {
+      admin,
+      error,
+      layout: "./layouts/dashboardLayouts",
+    });
+  }
+  if (password.length < 5 && password1.length < 5) {
+    // console.log("pass to weak");
+    error.push({ msg: "password too weak" });
+    res.render("./admin/auth/change_password", {
+      admin,
+      error,
+      layout: "./layouts/dashboardLayouts",
+    });
+    return;
+  }
+  // @DESC:check if password === password2
+  if (password !== password1) {
+    console.log("not match");
+    error.push({ msg: "passwords not match" });
+    res.render("./admin/auth/change_password", {
+      admin,
+      error,
+      layout: "./layouts/dashboardLayouts",
+    });
+  }
+
+  if (admin) {
+    try {
+      bcrypt.compare(oldpassword, admin.password, (err, isMatch) => {
+        if (!isMatch) {
+          error.push({ msg: "old password not matched" });
+          res.render("./admin/auth/change_password", {
+            admin,
+            error,
+            layout: "./layouts/dashboardLayouts",
+          });
+        }
+        if (isMatch) {
+          bcrypt.genSalt(10, function (err, salt) {
+            bcrypt.hash(password, salt, async (err, hash) => {
+              if (isMatch.password === hash) {
+                error.push({ msg: "please choose new password" });
+                res.render("./admin/auth/change_password", {
+                  admin,
+                  error,
+                  layout: "./layouts/dashboardLayouts",
+                });
+                return;
+              }
+              let update = await adminSchema.findOneAndUpdate(
+                { _id: req.params.id },
+                { $set: { password: hash || admin.password } },
+                { new: true }
+              );
+              if (!update) {
+                // res.send("unable to update pass")
+                error.push({ msg: "unable to update password" });
+
+                res.render("./admin/auth/change_password", {
+                  admin,
+                  error,
+                  layout: "./layouts/dashboardLayouts",
+                });
+              } else {
+                req.flash(
+                  "pass_change_success",
+                  "password changed successfully"
+                );
+                res.redirect("/admin/users");
+              }
+            });
+          });
+        }
+      });
+    } catch (error) {
+      console.log("somthing went wrong");
+    }
+  } else {
+    error.push({ msg: "users not found" });
+
+    res.render("./admin/auth/change_password", {
+      admin,
+      error,
+      layout: "./layouts/dashboardLayouts",
+    });
   }
 });

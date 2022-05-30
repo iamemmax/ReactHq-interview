@@ -17,91 +17,102 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
-
                 <% } %>
-                    <% if (users.length> 0) { %>
-                        <table id="table">
-                            <thead>
-                                <tr>
-                                    <th>S/n</th>
-                                    <th>First Name</th>
-                                    <th>last Name</th>
-                                    <th>email</th>
-                                    <th>phone</th>
-                                    <th>Acct No</th>
-                                    <th>Course</th>
-                                    <th>How you know us</th>
-                                    <th>New to mintyn </th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                    <% if(password_change.length> 0){ %>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <p>
+                                <%= password_change %>
 
-                                </tr>
-                            </thead>
-                            <br>
-                            <tbody>
+                            </p>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <% } %>
+                            <% if (users.length> 0) { %>
+                                <table id="table">
+                                    <thead>
+                                        <tr>
+                                            <th>S/n</th>
+                                            <th>First Name</th>
+                                            <th>last Name</th>
+                                            <th>email</th>
+                                            <th>phone</th>
+                                            <th>Acct No</th>
+                                            <th>Course</th>
+                                            <th>How you know us</th>
+                                            <th>New to mintyn </th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+
+                                        </tr>
+                                    </thead>
+                                    <br>
+                                    <tbody>
 
 
-                                <tr>
-                                    <% users.forEach((user, index)=> { %>
-                                        <td>
-                                            <%= index + 1 %>
-                                        </td>
-                                        <td>
-                                            <%= user.firstName %>
-                                        </td>
-                                        <td>
-                                            <%= user.lastName %>
-                                        </td>
-                                        <td>
-                                            <%= user.email %>
-                                        </td>
-                                        <td>
-                                            <%= user.phone %>
-                                        </td>
-                                        <td>
-                                            <%= user.acct_No %>
-                                        </td>
-                                        <td>
-                                            <%= user.course %>
-                                        </td>
-                                        <td>
-                                            <%= user.how_you_hear_abt_us %>
-                                        </td>
-                                        <td>
-                                            <%= user.new_to_mint_act %>
-                                        </td>
-                                        <td>
-                                            <form action="/admin/users/<%= user.id %> ">
+                                        <tr>
+                                            <% users.forEach((user, index)=> { %>
+                                                <td>
+                                                    <%= index + 1 %>
+                                                </td>
+                                                <td>
+                                                    <%= user.firstName %>
+                                                </td>
+                                                <td>
+                                                    <%= user.lastName %>
+                                                </td>
+                                                <td>
+                                                    <%= user.email %>
+                                                </td>
+                                                <td>
+                                                    <%= user.phone %>
+                                                </td>
+                                                <td>
+                                                    <%= user.acct_No %>
+                                                </td>
+                                                <td>
+                                                    <%= user.course %>
+                                                </td>
+                                                <td>
+                                                    <%= user.how_you_hear_abt_us %>
+                                                </td>
+                                                <td>
+                                                    <%= user.new_to_mint_act %>
+                                                </td>
+                                                <td>
+                                                    <form action="/admin/users/<%= user.id %> ">
 
-                                                <button type="submit"><i class="fa fa-pencil-square-o"></i></button>
-                                            </form>
+                                                        <button type="submit"><i
+                                                                class="fa fa-pencil-square-o"></i></button>
+                                                    </form>
 
-                                        </td>
-                                        <td>
-                                            <form action="/admin/users/delete/<%=user.id %>?_method=DELETE"
-                                                method="post">
-                                                <button id="del"
-                                                    onclick="return confirm('are you sure you want to delete')"><i
-                                                        class="fa fa-trash-o "></i></button>
-                                            </form>
-                                        </td>
-                                        <% }) %>
-                                </tr>
-                            </tbody>
-                        </table>
+                                                </td>
+                                                <td>
+                                                    <form action="/admin/users/delete/<%=user.id %>?_method=DELETE"
+                                                        method="post">
+                                                        <button id="del"
+                                                            onclick="return confirm('are you sure you want to delete')"><i
+                                                                class="fa fa-trash-o "></i></button>
+                                                    </form>
+                                                </td>
+                                                <% }) %>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                        <p class="lead">
-                            <button id="json" class="btn btn-primary">TO JSON</button>
-                            <button id="csv" class="btn btn-info">TO CSV</button>
-                            <button id="pdf" class="btn btn-danger">TO PDF</button>
-                            <button id="txt" class="btn btn-success">TO TXT</button>
-                        </p>
+                                <p class="lead">
+                                    <button id="json" class="btn btn-primary">TO JSON</button>
+                                    <button id="csv" class="btn btn-info">TO CSV</button>
+                                    <button id="pdf" class="btn btn-danger">TO PDF</button>
+                                    <button id="txt" class="btn btn-success">TO TXT</button>
+                                </p>
 
-                        <% if (users) { %>
-                            <form action="/admin/users/download">
-                                <div class="download-info">
-                                    <button type="submit">Download Pdf</button>
-                            </form>
+                                <% if (users) { %>
+                                    <form action="/admin/users/download">
+                                        <div class="download-info">
+                                            <button type="submit">Download Pdf</button>
+                                    </form>
 </div>
 <% }%>
 
