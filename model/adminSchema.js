@@ -31,6 +31,16 @@ const adminSchema = new mongoose.Schema({
     enum: ["member", "admin"],
   },
   profile: [],
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+  },
+
+  phone: {
+    type: Number,
+  },
 
   password: {
     type: String,

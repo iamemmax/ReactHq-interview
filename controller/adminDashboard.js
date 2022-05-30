@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const ejs = require("ejs");
 const userSchema = require("../model/UserSchema");
+const adminSchema = require("../model/adminSchema");
 const pdf = require("html-pdf");
 const fs = require("fs");
 const path = require("path");
@@ -8,28 +8,22 @@ const path = require("path");
 // @DESC: dashboard
 exports.GetDashboard = asyncHandler(async (req, res) => {
   res.render("./admin/dashboard/dashboard", {
-    user: req.user,
+    // user: req.user,
     layout: "./layouts/dashboardLayouts",
+    admin: req.user,
   });
 });
 
 //@DESC: get all users by admin
 exports.getAllUser = asyncHandler(async (req, res) => {
   let users = await userSchema.find().sort({ createdAt: "-1" });
+
   res.render("./admin/dashboard/users", {
     layout: "./layouts/dashboardLayouts",
     users,
+    admin: req.user,
     deleteUser: req.flash("delete_user"),
     updateUser: req.flash("success"),
-  });
-});
-
-exports.editUserPage = asyncHandler(async (req, res) => {
-  let user = await userSchema.findById(req.params.id);
-
-  res.render("./admin/dashboard/editUser", {
-    // layout: "./layouts/dashboardLayouts",
-    user,
   });
 });
 
@@ -39,6 +33,7 @@ exports.getPdfPage = async (req, res) => {
   res.render("./admin/dashboard/download", {
     layout: false,
     users,
+    admin: req.user,
   });
 };
 
@@ -62,6 +57,18 @@ exports.generateUserPdf = asyncHandler(async (req, res) => {
           res.send(datafile);
         }
       });
+  });
+});
+
+//@DESC: get update user page
+
+exports.editUserPage = asyncHandler(async (req, res) => {
+  let user = await userSchema.findById(req.params.id);
+
+  res.render("./admin/dashboard/editUser", {
+    // layout: "./layouts/dashboardLayouts",
+    user,
+    admin: req.user,
   });
 });
 //@DESC:update user
@@ -114,6 +121,8 @@ exports.updateUser = async (req, res) => {
           res.render("./admin/dashboard/editUser", {
             // layout: "./layouts/dashboardLayouts",
             user,
+            admin: req.user,
+
             error,
           });
         }
@@ -160,5 +169,6 @@ exports.searchUser = asyncHandler(async (req, res) => {
   res.render("./admin/dashboard/search", {
     layout: "./layouts/dashboardLayouts",
     users,
+    admin: req.user,
   });
 });
