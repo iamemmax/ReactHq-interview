@@ -1,0 +1,84 @@
+<!--------- Registration area Start --------->
+<section class="registration__area">
+    <div class="container">
+        <div class="registration__form" id="signup">
+            <form action="/admin/update-admin/<%=admin.id%>?_method=PUT" method="post" enctype="multipart/form-data">
+                <h2>update Admin Account </h2>
+                <% if(typeof error !=="undefined" ){ %>
+                    <%error.forEach(errors=>{%>
+
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            <p>
+                                <%= errors.msg %>
+                            </p>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <% }) %>
+                            <% } %>
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <label for="profile"><img src="<%=admin.profile[0].img%> " alt="admin img"
+                                                style="width: 50px;"></label>
+                                        <div class="form__input">
+                                            <input type="file" class="form-control" id="profile" name="profile"
+                                                style="display: none;" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form__input">
+                                            <input type="text" class="form-control" placeholder="username"
+                                                name="firstName" value="<%=admin?.firstName%>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form__input">
+                                            <input type="text" class="form-control" placeholder="Last name"
+                                                name="lastName" value="<%=admin?.lastName%>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form__input">
+                                            <input type="text" disabled class="form-control" placeholder="username"
+                                                name="username" value="<%=admin.username  %> " />
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-12">
+                                        <div class="form__input">
+                                            <input type="email" disabled class="form-control"
+                                                placeholder="Email Address" name="email" value="<%=admin.email  %>" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form__input">
+                                            <input type="Number" class="form-control" placeholder="Phone" name="phone"
+                                                value="<%=admin?.phone  %>" />
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="col-12">
+                                    <div class="form__submit" style="margin-top: -6px;">
+                                        <button class="common-btn w-100" type="submit">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </div>
+            </form>
+
+            <br>
+            <div class="already">
+                <p>Already have an Account? <a href="/admin/login">Login</a></p>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+
+</section>
+<!--------- Registration area End --------->

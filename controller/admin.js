@@ -4,26 +4,26 @@ const bcrypt = require("bcryptjs");
 const sharp = require("sharp");
 const passport = require("passport");
 const sendEmail = require("../config/email");
-// const crypto = require("crypto");
+const crypto = require("crypto");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
+const { profile } = require("console");
 
 // @DESC: render admin signup page
 //@ACCESS: private
 exports.getSignupPage = asyncHandler(async (req, res) => {
-  res.render("./admin/addAdmin");
+  res.render("./admin/auth/addAdmin");
 });
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
   let error = [];
-  let proImg = [];
-  console.log(req.body);
+
   let { username, email, password, password2 } = req.body;
   // @DESC:check if user filled all field
   if (!username || !email || !password || !password2) {
     console.log("fill all");
     error.push({ msg: "all field are required" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -35,21 +35,21 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter a valid email" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
   // @DESC:check password length
   if (password.length < 5 && password2.length < 5) {
     // console.log("pass to weak");
     error.push({ msg: "password too weak" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
   // @DESC:check if password === password2
   if (password !== password2) {
     console.log("not match");
     error.push({ msg: "passwords not match" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -58,7 +58,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (!req.file) {
     console.log("pls choose a file");
     error.push({ msg: "please choose a file" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -67,7 +67,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (userNameExist) {
     console.log("username exist");
     error.push({ msg: "username already link to an existing user" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -76,7 +76,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   if (emailExist) {
     console.log("email exist");
     error.push({ msg: "email already link to an existing user" });
-    res.render("./admin/addAdmin", { error });
+    res.render("./admin/auth/addAdmin", { error });
     return;
   }
 
@@ -99,7 +99,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
     // @DESC if error occur when trying to upload img to cloud server
     if (!uploadImg) {
       error.push({ msg: "unable to upload profile img" });
-      res.render("./admin/addAdmin", { error });
+      res.render("./admin/auth/addAdmin", { error });
       return;
     }
 
@@ -125,18 +125,19 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 
         if (newAdmin) {
           console.log(newAdmin);
-          res.render("./success", { firstName: username, layout: false });
+          req.flash("success", "Registration  successfull !!!");
+          res.redirect("/admin/login");
         } else {
           fs.unlinkSync(req.file.path);
           error.push({ msg: "unable to register admin" });
-          res.render("./admin/addAdmin", { error });
+          res.render("./admin/auth/addAdmin", { error });
           return;
         }
       });
     });
   } catch (error) {
     // error.push({ msg: "unable to register admin" });
-    res.render("./admin/addAdmin", { error: error.message });
+    res.render("./admin/auth/addAdmin", { error: error.message });
     return;
   }
 });
@@ -144,7 +145,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 // @DESC: render admin login page
 //@ACCESS: private
 exports.getLoginPage = asyncHandler(async (req, res) => {
-  res.render("./admin/LoginAdmin");
+  res.render("./admin/auth/LoginAdmin");
 });
 
 // @DESC: submit admin login page
@@ -156,8 +157,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
 
   if (!email || !password) {
     error.push({ msg: "all field are required" });
-    res.render("./admin/LoginAdmin", { error });
-    return;
+    res.render("./admin/auth/LoginAdmin", { error });
   }
 
   // check if user enter valid email
@@ -168,8 +168,7 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
   }
   if (!validateEmail(email)) {
     error.push({ msg: "please enter valid email" });
-    res.render("./admin/LoginAdmin", { error });
-    return;
+    res.render("./admin/auth/LoginAdmin", { error });
   }
 
   try {
@@ -177,29 +176,26 @@ exports.loginAdmin = asyncHandler(async (req, res, next) => {
       if (err) {
         next(err);
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/LoginAdmin", { error });
-
-        return;
+        res.render("./admin/auth/LoginAdmin", { error });
       }
       if (!user) {
         error.push({ msg: "Email or password not correct" });
-        res.render("./admin/LoginAdmin", { error });
+        res.render("./admin/auth/LoginAdmin", { error });
       }
 
       req.logIn(user, function (err) {
         if (err) {
           next(err);
           error.push({ msg: "Email or password not correct" });
-          res.render("./admin/LoginAdmin", { error });
+          res.render("./admin/auth/LoginAdmin", { error });
+        } else {
+          res.redirect("/admin/dashboard");
         }
-
-        res.redirect("./dashboard");
       });
     })(req, res, next);
   } catch (error) {
     error.push({ msg: "Email or password not correct" });
-    res.render("./admin/LoginAdmin", { error });
-    return;
+    res.render("./admin/auth/LoginAdmin", { error });
   }
 });
 
@@ -216,7 +212,7 @@ exports.LogOutAdmin = asyncHandler(async (req, res) => {
 
 //@DESC: forget password
 exports.forgetPassword = asyncHandler(async (req, res) => {
-  res.render("./admin/forgetPassword");
+  res.render("./admin/auth/forgetPassword");
 });
 
 exports.RequestPasswordReset = asyncHandler(async (req, res) => {
@@ -224,18 +220,18 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
   let { email } = req.body;
   if (!email) {
     error.push({ msg: "please enter your register email" });
-    res.render("./admin/forgetPassword", { error });
+    res.render("./admin/auth/forgetPassword", { error });
     return;
   }
   const findUserByEmail = await adminSchema.findOne({ email: email });
   try {
     if (findUserByEmail) {
-      // crypto.randomBytes(48, async (err, buffer) => {
-      //   let token = buffer.toString("hex");
-      sendEmail(
-        email,
-        "Reset Password ",
-        `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
+      crypto.randomBytes(48, async (err, buffer) => {
+        let token = buffer.toString("hex");
+        sendEmail(
+          email,
+          "Reset Password ",
+          `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
   <style>
     @media screen and (max-width: 768px) {
       header {
@@ -287,9 +283,10 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
     <br style="box-sizing: border-box;">
     <br style="box-sizing: border-box;"> Password Reset
     <br style="box-sizing: border-box;">
-    <br style="box-sizing: border-box;"> follow this link to reset your password <a href="localhost:5000/admin/reset-password/${findUserByEmail._id}">Reset Password</a>
+    <br style="box-sizing: border-box;"> follow this link to reset your password 
+
      <br>
-     
+      <a href="http://localhost:5000/admin/reset-password/${findUserByEmail._id}/${token}">Reset Password</a> 
    
     
     <br style="box-sizing: border-box;">
@@ -317,31 +314,57 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
 </div>
 </div>
 `
-      );
-      res.render("./success", { firstName: "", layout: false });
+        );
+        let updateToken = await adminSchema.findByIdAndUpdate(
+          { _id: findUserByEmail.id },
+          { $set: { token: token } },
+          { new: true }
+        );
+        if (updateToken) {
+          req.flash(
+            "success",
+            "password link as been sent to your email address"
+          );
+          res.redirect("/admin/forget-password");
+        }
+      });
     } else {
       error.push({ msg: "user not found" });
-      res.render("./admin/forgetPassword", { error });
+      res.render("./admin/auth/forgetPassword", { error });
     }
   } catch (error) {
     error.push({ msg: "something went wrong" });
-    res.render("./admin/forgetPassword", { error });
+    res.render("./admin/auth/forgetPassword", { error });
   }
 });
 
 // @DESC: reset admin password
 exports.resetPasswordPage = asyncHandler(async (req, res) => {
-  res.render("./admin/resetPassword", { id: req.params.id });
+  // res.render("./admin/auth/resetPassword", {
+  //   id: req.params.id,
+  //   token: req.params.token,
+  // });
+  res.render("./admin/auth/resetPassword", {
+    id: req.params.id,
+    token: req.params.token,
+  });
 });
 
 exports.updateNewPassword = asyncHandler(async (req, res) => {
   let error = [];
-  const user = await adminSchema.findById({ _id: req.params.id });
+  const user = await adminSchema.find({
+    $and: [
+      {
+        _id: req.params.id,
+        token: req.params.token,
+      },
+    ],
+  });
 
   // @DESC:return error if user with the above id not found
   if (!user) {
     error.push({ msg: "invalid link" });
-    res.render("./admin/resetPassword", { error });
+    res.render("./admin/auth/resetPassword", { error });
     return;
   }
 
@@ -350,14 +373,14 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
 
     if (password.length < 5 && password2.length < 5) {
       error.push({ msg: "password too weak" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
       return;
     }
     // @DESC:check if password === password2
     if (password !== password2) {
       console.log("not match");
       error.push({ msg: "passwords not match" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
       return;
     }
 
@@ -376,24 +399,93 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
           );
 
           if (updatePass) {
-            res.redirect("/admin/dashboard");
+            await adminSchema.findByIdAndUpdate(
+              { _id: req.params.id },
+              { $set: { token: "" } },
+              { new: true }
+            );
+            req.flash("success", "admin password  change successfully");
+            res.redirect("/admin/login");
           } else {
             error.push({ msg: "unable to update password" });
-            res.render("./admin/resetPassword", { error });
+            res.render("./admin/auth/resetPassword", { error });
           }
         });
       });
     } catch (error) {
       error.push({ msg: "something went wrong" });
-      res.render("./admin/resetPassword", { error });
+      res.render("./admin/auth/resetPassword", { error });
     }
   }
 });
 
-// @DESC: dashboard
-exports.GetDashboard = asyncHandler(async (req, res) => {
-  res.render("./admin/dashboard", {
-    user: req.user,
+//@DESC:Update Admin info
+exports.adminInfo = asyncHandler(async (req, res) => {
+  let user = await adminSchema.findById(req.params.id);
+
+  res.render("./admin/auth/updateAdmin", {
+    admin: user,
     layout: "./layouts/dashboardLayouts",
   });
+});
+
+exports.updateAdminInfo = asyncHandler(async (req, res) => {
+  let admin = await adminSchema.findById(req.params.id);
+  let { firstName, lastName, phone } = req.body;
+
+  let adminImg = {
+    img_id: admin?.profile[0]?.img_id,
+    img: admin?.profile[0]?.img,
+  };
+
+  if (req.file) {
+    await cloudinary.uploader.destroy(admin.profile[0].img_id);
+
+    await sharp(req.file.path)
+      .flatten({ background: { r: 255, g: 255, b: 255, alpha: 0 } })
+      .resize(200, 200)
+      .png({ quality: 90, force: true });
+  }
+  let uploadImg = await cloudinary.uploader.upload(req.file.path, {
+    upload_preset: "reactHq",
+  });
+  let cloudImgInfo = {
+    img_id: uploadImg.public_id,
+    img: uploadImg.secure_url,
+  };
+  fs.unlinkSync(req.file.path);
+
+  // @DESC if error occur when trying to upload img to cloud server
+
+  // @DESC delete the file path
+
+  const update = await adminSchema.findByIdAndUpdate(
+    { _id: req.user.id },
+    {
+      $set: {
+        firstName: firstName || admin.firstName,
+        lastName: lastName || admin.lastName,
+        phone: phone || admin.phone,
+        profile: cloudImgInfo || adminImg,
+      },
+    },
+    { new: true }
+  );
+
+  try {
+    if (update) {
+      req.flash("success", "user updated successfully");
+      res.redirect("/admin/users");
+    } else {
+      error.push({ msg: "unable to update admin" });
+      res.render("./admin/dashboard/updateAdmin", {
+        // layout: "./layouts/dashboardLayouts",
+        user,
+        admin: req.user,
+        error,
+      });
+    }
+  } catch (error) {
+    console.log("something went wrong");
+  }
 });
