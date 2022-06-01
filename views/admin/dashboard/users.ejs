@@ -120,11 +120,7 @@
 
 </div>
 
-<!-- <script type="text/javascript" src="../../../assets/src/jquery-3.3.1.slim.min.js"></script>
-            <script src="js/jquery.dataTables.min.js" type="text/javascript"></script>
-            <script type="text/javascript" src="../../../assets/src/jspdf.min.js"></script>
-            <script type="text/javascript" src="../../../assets/src/jspdf.plugin.autotable.min.js"></script>
-            <script type="text/javascript" src="../../../assets/src/tableHTMLExport.js"></script> -->
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -153,7 +149,9 @@
     $("#pdf").on("click", function () {
         $("#examples").tableHTMLExport({
             type: "pdf",
-            filename: `users${Date.now()}.pdf`
+            filename: `users${Date.now()}.pdf`,
+            orientation: 'l'
+
         })
     })
 
@@ -164,7 +162,9 @@
     $("#txt").on("click", function () {
         $("#examples").tableHTMLExport({
             type: "txt",
-            filename: "users.tet"
+            filename: `users.txt.${Date.now()}.txt`,
+            orientation: 'l'
+
         })
     })
 

@@ -464,7 +464,7 @@ exports.updateAdminInfo = asyncHandler(async (req, res) => {
       .resize(200, 200)
       .png({ quality: 90, force: true });
   }
-  let uploadImg = await cloudinary.uploader.upload(req?.file?.path, {
+  let uploadImg = await cloudinary.uploader.upload(req?.file.path, {
     upload_preset: "reactHq",
   });
   let cloudImgInfo = {
