@@ -211,7 +211,7 @@ exports.submitForm = asyncHandler(async (req, res) => {
     console.log(error.message);
 
     res.render("index", {
-      error: error.message,
+      error: "something went wrong",
       layout: false,
     });
   }

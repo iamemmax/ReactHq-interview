@@ -459,13 +459,12 @@ exports.updateAdminInfo = asyncHandler(async (req, res) => {
 
   if (req.file) {
     await cloudinary.uploader.destroy(admin.profile[0].img_id);
-
-    await sharp(req.file.path)
+    await sharp(req?.file?.path)
       .flatten({ background: { r: 255, g: 255, b: 255, alpha: 0 } })
       .resize(200, 200)
       .png({ quality: 90, force: true });
   }
-  let uploadImg = await cloudinary.uploader.upload(req.file.path, {
+  let uploadImg = await cloudinary.uploader.upload(req?.file?.path, {
     upload_preset: "reactHq",
   });
   let cloudImgInfo = {
