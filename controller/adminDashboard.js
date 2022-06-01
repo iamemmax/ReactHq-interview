@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const userSchema = require("../model/UserSchema");
 const adminSchema = require("../model/adminSchema");
-const pdf = require("html-pdf");
 const fs = require("fs");
 const path = require("path");
 
@@ -24,39 +23,6 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     admin: req.user,
     deleteUser: req.flash("delete_user"),
     updateUser: req.flash("success"),
-  });
-});
-
-exports.getPdfPage = async (req, res) => {
-  let users = await userSchema.find().sort({ createdAt: "-1" });
-
-  res.render("./admin/dashboard/download", {
-    layout: false,
-    users,
-    admin: req.user,
-  });
-};
-
-exports.generateUserPdf = asyncHandler(async (req, res) => {
-  const option = { format: "A4" };
-  let users = await userSchema.find().sort({ createdAt: "-1" });
-
-  // let datafile = fs.readFileSync("asset/docs/users/users.pdf", "utf-8");
-  res.render("download", { users }, (err, html) => {
-    pdf
-      .create(html, option)
-      .toFile("./assets/docs/users/users.pdf", (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          let datafile = fs.renderFile(
-            "./assets/docs/users/users.pdf",
-            "utf-8"
-          );
-
-          res.send(datafile);
-        }
-      });
   });
 });
 
