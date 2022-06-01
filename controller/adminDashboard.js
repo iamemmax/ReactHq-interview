@@ -23,6 +23,10 @@ exports.getAllUser = asyncHandler(async (req, res) => {
     admin: req.user,
     deleteUser: req.flash("delete_user"),
     updateUser: req.flash("success"),
+<<<<<<< HEAD
+=======
+    password_change: req.flash("pass_change_success"),
+>>>>>>> dashboard
   });
 });
 

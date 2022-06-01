@@ -12,6 +12,8 @@ const {
   updateNewPassword,
   adminInfo,
   updateAdminInfo,
+  change_admin_password_page,
+  Change_admin_Password,
 } = require("../controller/admin");
 const upload = require("../config/upload");
 const protect = require("../config/protect");
@@ -30,9 +32,16 @@ router
   .route("/update-admin/:id")
   .get(protect, adminInfo)
   .put(upload.single("profile"), updateAdminInfo);
+
+// .put();
 router
   .route("/reset-password/:id/:token")
   .get(resetPasswordPage)
   .put(updateNewPassword);
 router.get("/logout", LogOutAdmin);
+
+router
+  .route("/change_password/:id")
+  .get(protect, change_admin_password_page)
+  .put(Change_admin_Password);
 module.exports = router;
