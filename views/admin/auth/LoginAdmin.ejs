@@ -13,55 +13,63 @@
 
                     </div>
                     <% } %>
-
-
-                        <% if(typeof error !=="undefined" ){ %>
-                            <%error.forEach(errors=>{%>
-
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                    <p>
-                                        <%= errors.msg %>
-                                    </p>
-
+                        <% if(pass_Reset_success.length> 0){ %>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <%= pass_Reset_success %>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
-                                </div>
 
-                                <% }) %>
-                                    <% } %>
-                                        <div class="row">
+                            </div>
+                            <% } %>
 
 
+                                <% if(typeof error !=="undefined" ){ %>
+                                    <%error.forEach(errors=>{%>
 
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            <p>
+                                                <%= errors.msg %>
+                                            </p>
 
-                                            <div class="col-sm-12">
-                                                <div class="form__input">
-                                                    <input type="email" class="form-control" placeholder="Email Address"
-                                                        name="email" />
-                                                </div>
-                                            </div>
-
-
-
-
-
-
-                                            <div class="col-sm-12">
-                                                <div class="form__input">
-                                                    <input type="password" class="form-control" placeholder="password"
-                                                        name="password" />
-                                                </div>
-                                            </div>
-
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
                                         </div>
 
-                                        <div class="col-12">
-                                            <div class="form__submit pt-1">
-                                                <button class="common-btn w-100" type="submit">
-                                                    Login
-                                                </button>
-                                            </div>
-                                        </div>
+                                        <% }) %>
+                                            <% } %>
+                                                <div class="row">
+
+
+
+
+                                                    <div class="col-sm-12">
+                                                        <div class="form__input">
+                                                            <input type="email" class="form-control"
+                                                                placeholder="Email Address" name="email" />
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+
+                                                    <div class="col-sm-12">
+                                                        <div class="form__input">
+                                                            <input type="password" class="form-control"
+                                                                placeholder="password" name="password" />
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-12">
+                                                    <div class="form__submit pt-1">
+                                                        <button class="common-btn w-100" type="submit">
+                                                            Login
+                                                        </button>
+                                                    </div>
+                                                </div>
             </form>
             <div class="already">
                 <p>not yet an Admin? <a href="/admin/register">Register</a></p>

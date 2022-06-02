@@ -3,7 +3,7 @@
     <div class="container">
         <div class="registration__form" id="signup">
             <form action="/admin/update-admin/<%=admin.id%>?_method=PUT" method="post" enctype="multipart/form-data">
-                <h2>update Admin Account </h2>
+                <h2 class="heading">update Admin Account </h2>
                 <% if(typeof error !=="undefined" ){ %>
                     <%error.forEach(errors=>{%>
 
@@ -20,13 +20,21 @@
                                 <div class="row">
 
                                     <div class="col-sm-12">
-                                        <label for="profile"><img src="<%=admin.profile[0].img%> " alt="admin img"
-                                                style="width: 50px;"></label>
+                                        <div class="upload-img">
+                                            <label for="profile-img">
+                                                <img src="<%=admin.profile[0].img%> " alt="admin img"
+                                                    style="width: 50px;">
+                                                <i class="fa fa-camera"></i>
+                                            </label>
+
+
+                                        </div>
                                         <div class="form__input">
-                                            <input type="file" class="form-control" id="profile" name="profile"
+                                            <input type="file" class="form-control" id="profile-img" name="profile"
                                                 style="display: none;" />
                                         </div>
                                     </div>
+                                    <br>
                                     <div class="col-sm-6">
                                         <div class="form__input">
                                             <input type="text" class="form-control" placeholder="username"
@@ -72,10 +80,8 @@
                                 </div>
             </form>
 
-            <br>
-            <div class="already">
-                <p>Already have an Account? <a href="/admin/login">Login</a></p>
-            </div>
+
+
         </div>
     </div>
     <!-- </div> -->

@@ -10,12 +10,13 @@ const Layout = require("express-ejs-layouts");
 const session = require("express-session");
 const passport = require("passport");
 const flash = require("connect-flash");
-
+const path = require("path");
 // @DESC: middlewares
 app.set("view engine", "ejs");
 app.use(Layout);
 app.set("layout", "./layouts/authlayouts");
-app.use(express.static(__dirname, +"asserts"));
+// app.use(express.static(__dirname, +"asserts"));
+app.use(express.static(path.join(__dirname, "assets")));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

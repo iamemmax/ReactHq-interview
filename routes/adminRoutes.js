@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {
-  registerAdmin,
   getSignupPage,
+  registerAdmin,
   getLoginPage,
   loginAdmin,
   LogOutAdmin,
@@ -24,21 +24,21 @@ router
 router.route("/login").get(getLoginPage).post(loginAdmin);
 
 // @DESC forget password
+router.get("/logout", LogOutAdmin);
 
 router.route("/forget-password").get(forgetPassword).post(RequestPasswordReset);
 
 // @DESC updating new password
+router
+  .route("/reset-password/:id/:token")
+  .get(resetPasswordPage)
+  .put(updateNewPassword);
 router
   .route("/update-admin/:id")
   .get(protect, adminInfo)
   .put(upload.single("profile"), updateAdminInfo);
 
 // .put();
-router
-  .route("/reset-password/:id/:token")
-  .get(resetPasswordPage)
-  .put(updateNewPassword);
-router.get("/logout", LogOutAdmin);
 
 router
   .route("/change_password/:id")

@@ -7,7 +7,7 @@ const sendEmail = require("../config/email");
 const crypto = require("crypto");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
-const { profile } = require("console");
+const { request } = require("http");
 
 // @DESC: render admin signup page
 //@ACCESS: private
@@ -146,6 +146,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
 exports.getLoginPage = asyncHandler(async (req, res) => {
   res.render("./admin/auth/LoginAdmin", {
     successReg: req.flash("reg_success"),
+    pass_Reset_success: req.flash("admin_pass_success"),
   });
 });
 
@@ -231,7 +232,9 @@ exports.LogOutAdmin = asyncHandler(async (req, res) => {
 
 //@DESC: forget password
 exports.forgetPassword = asyncHandler(async (req, res) => {
-  res.render("./admin/auth/forgetPassword");
+  res.render("./admin/auth/forgetPassword", {
+    passReset: req.flash("pass_success"),
+  });
 });
 
 exports.RequestPasswordReset = asyncHandler(async (req, res) => {
@@ -341,7 +344,7 @@ exports.RequestPasswordReset = asyncHandler(async (req, res) => {
         );
         if (updateToken) {
           req.flash(
-            "success",
+            "pass_success",
             "password link as been sent to your email address"
           );
           res.redirect("/admin/forget-password");
@@ -423,7 +426,10 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
               { $set: { token: "" } },
               { new: true }
             );
-            req.flash("success", "admin password  change successfully");
+            req.flash(
+              "admin_pass_success",
+              "admin password  change successfully"
+            );
             res.redirect("/admin/login");
           } else {
             error.push({ msg: "unable to update password" });
@@ -449,8 +455,9 @@ exports.adminInfo = asyncHandler(async (req, res) => {
 });
 
 exports.updateAdminInfo = asyncHandler(async (req, res) => {
-  let admin = await adminSchema.findById(req.params.id);
   let { firstName, lastName, phone } = req.body;
+  let admin = await adminSchema.findById(req.params.id);
+  let update;
 
   let adminImg = {
     img_id: admin?.profile[0]?.img_id,
@@ -459,37 +466,49 @@ exports.updateAdminInfo = asyncHandler(async (req, res) => {
 
   if (req.file) {
     await cloudinary.uploader.destroy(admin.profile[0].img_id);
-    await sharp(req?.file?.path)
+    await sharp(req?.file.path)
       .flatten({ background: { r: 255, g: 255, b: 255, alpha: 0 } })
       .resize(200, 200)
       .png({ quality: 90, force: true });
-  }
-  let uploadImg = await cloudinary.uploader.upload(req?.file.path, {
-    upload_preset: "reactHq",
-  });
-  let cloudImgInfo = {
-    img_id: uploadImg.public_id,
-    img: uploadImg.secure_url,
-  };
-  fs.unlinkSync(req.file.path);
+    let uploadImg = await cloudinary.uploader.upload(req?.file?.path, {
+      upload_preset: "reactHq",
+    });
+    let cloudImgInfo = {
+      img_id: uploadImg.public_id,
+      img: uploadImg.secure_url,
+    };
+    fs.unlinkSync(req.file.path);
 
-  // @DESC if error occur when trying to upload img to cloud server
+    // @DESC if error occur when trying to upload img to cloud server
 
-  // @DESC delete the file path
+    // @DESC delete the file path
 
-  const update = await adminSchema.findByIdAndUpdate(
-    { _id: req.user.id },
-    {
-      $set: {
-        firstName: firstName || admin.firstName,
-        lastName: lastName || admin.lastName,
-        phone: phone || admin.phone,
-        profile: cloudImgInfo || adminImg,
+    update = await adminSchema.findByIdAndUpdate(
+      { _id: req.user.id },
+      {
+        $set: {
+          firstName: firstName || admin.firstName,
+          lastName: lastName || admin.lastName,
+          phone: phone || admin.phone,
+          profile: cloudImgInfo,
+        },
       },
-    },
-    { new: true }
-  );
-
+      { new: true }
+    );
+  } else {
+    update = await adminSchema.findByIdAndUpdate(
+      { _id: req.user.id },
+      {
+        $set: {
+          firstName: firstName || admin.firstName,
+          lastName: lastName || admin.lastName,
+          phone: phone || admin.phone,
+          profile: adminImg,
+        },
+      },
+      { new: true }
+    );
+  }
   try {
     if (update) {
       req.flash("success", "user updated successfully");
@@ -613,3 +632,15 @@ exports.Change_admin_Password = asyncHandler(async (req, res) => {
     });
   }
 });
+
+// exports.updateAdminInfo = asyncHandler(async (req, res) => {
+//  let { firstName, lastName, phone } = req.body;
+//  let admin = await adminSchema.findById(req.params.id);
+
+// //  let adminImg = {
+// //    img_id: admin?.profile[0]?.img_id,
+// //    img: admin?.profile[0]?.img,
+// //  };
+
+// if(req.file)
+// })
