@@ -335,6 +335,7 @@ exports.getLoginPage = asyncHandler(async (req, res) => {
   res.render("./admin/auth/LoginAdmin", {
     successReg: req.flash("reg_verify_success"),
     adminResetsuccess: req.flash("admin_pass_success"),
+    logoutSuccess: req.flash("logout_success"),
   });
 });
 
@@ -413,6 +414,7 @@ exports.LogOutAdmin = asyncHandler(async (req, res) => {
     if (err) {
       return next(err);
     }
+    req.flash("logout_success", "you session has expired");
     res.redirect("./login");
   });
   // req.flash("logout", "you have successfully logout");
