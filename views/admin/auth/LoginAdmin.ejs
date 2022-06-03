@@ -13,14 +13,18 @@
 
                     </div>
                     <% } %>
-                        <% if(pass_Reset_success.length> 0){ %>
+
+                        <% if(typeof adminResetsuccess !=="undefined" ){ %>
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                <%= pass_Reset_success %>
+                                <%= adminResetsuccess %>
                                     <button type="button" class="btn-close" data-bs-dismiss="alert"
                                         aria-label="Close"></button>
 
                             </div>
                             <% } %>
+
+
+
 
 
                                 <% if(typeof error !=="undefined" ){ %>

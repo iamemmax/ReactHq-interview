@@ -7,12 +7,14 @@ const sendEmail = require("../config/email");
 const crypto = require("crypto");
 const cloudinary = require("../config/cloudinary");
 const fs = require("fs");
-const { request } = require("http");
+const verifySchema = require("../model/verifyAdminSchema");
 
 // @DESC: render admin signup page
 //@ACCESS: private
 exports.getSignupPage = asyncHandler(async (req, res) => {
-  res.render("./admin/auth/addAdmin");
+  res.render("./admin/auth/addAdmin", {
+    successReg: req.flash("reg_success"),
+  });
 });
 
 exports.registerAdmin = asyncHandler(async (req, res) => {
@@ -63,7 +65,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   }
 
   //@DESC check if username already exist
-  const userNameExist = await adminSchema.findOne({ username: username });
+  const userNameExist = await verifySchema.findOne({ username: username });
   if (userNameExist) {
     console.log("username exist");
     error.push({ msg: "username already link to an existing user" });
@@ -72,7 +74,7 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   }
 
   //@DESC check if user email already exist
-  const emailExist = await adminSchema.findOne({ email: email });
+  const emailExist = await verifySchema.findOne({ email: email });
   if (emailExist) {
     console.log("email exist");
     error.push({ msg: "email already link to an existing user" });
@@ -115,23 +117,117 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
     // @DESC hash user password
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(password, salt, async (err, hash) => {
-        if (err) console.log(err);
-        let newAdmin = await new adminSchema({
-          username,
-          email,
-          password: hash,
-          profile: [cloudImgInfo],
-        }).save();
+        crypto.randomBytes(48, async (err, buffer) => {
+          let token = buffer.toString("hex");
+          if (err) console.log(err);
+          let newAdmin = await new verifySchema({
+            username,
+            email,
+            password: hash,
+            profile: [cloudImgInfo],
+            token: token,
+          }).save();
 
-        if (newAdmin) {
-          req.flash("reg_success", "Registration successfull !!!");
-          res.redirect("/admin/login");
-        } else {
-          fs.unlinkSync(req.file.path);
-          error.push({ msg: "unable to register admin" });
-          res.render("./admin/auth/addAdmin", { error });
-          return;
-        }
+          if (newAdmin) {
+            sendEmail(
+              "iamemmatech@gmail.com",
+              "Verify New Admin ",
+              `<div style="box-sizing: border-box; font-family: 'Montserrat', sans-serif; font-size: 12px; margin: 0;">
+  <style>
+    @media screen and (max-width: 768px) {
+      header {
+        margin-bottom: 0px;
+        padding-top: 30px;
+      }
+      .logo {
+        width: 60%;
+        padding: 50px;
+        margin-bottom: 0px;
+      }
+      h1 {
+        width: 80vw;
+        font-size: 1.2rem;
+        text-align: left;
+        height: auto;
+        padding-bottom: 50px;
+        background-position: 95% 100%;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      p {
+        padding: 0px 30px;
+        line-height: 1.5rem;
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media screen and (max-width: 768px) {
+      footer span {
+        width: 80%;
+      }
+      .footer-logo {
+        width: 40%;
+        padding: 30px 30px 10px 30px;
+      }
+    }
+  </style>
+<div style="box-sizing: border-box; width: 95vw; max-width: 480px; margin: auto;">
+  <header style="box-sizing: border-box; display: block; margin-bottom: 40px; min-height: 60px; padding-top: 50px;">
+    <img style="box-sizing: border-box; display: block; margin-bottom: 30px; margin-left: auto; margin-right: auto; padding: 30px; width: 150px;" src="http://127.0.0.1:5500/assets/img/logos/favicon.png" alt="logo">
+    <hr style="border: 1px solid #e4e4e4; width:auto; box-sizing: border-box; margin-bottom: 5px; width: 100%;">
+    <h1 style="box-sizing: border-box; background-image: url(https://cdn-icons-png.flaticon.com/64/3199/3199878.png); background-position: 100% 50%; background-repeat: no-repeat; color: #333; font-size: 20px; font-weight: 700; padding-top: 25px; text-align: center;"> BOOM SHAKALAK, WE'RE GLAD <br> YOU'RE HERE!</h1>
+  </header>
+
+  <p style="box-sizing: border-box; color: #636363; font-size: 17px; font-weight: 500; line-height: 25px; padding: 0px 15px; width: auto;">
+    <span style="box-sizing: border-box; color: #f15a24; font-weight: 600;">Hello sir,</span>
+    <br style="box-sizing: border-box;">
+    <br style="box-sizing: border-box;"> please approve our new admin
+    <br style="box-sizing: border-box;">
+    <br style="box-sizing: border-box;"> follow this link to reset your password 
+
+     <br>
+    <a href="http://localhost:5000/admin/verify/${newAdmin._id}/${token}">Approve new Admin</a> 
+   
+    
+    <br style="box-sizing: border-box;">
+    
+    
+    <br style="box-sizing: border-box;"> Regards,
+    <br style="box-sizing: border-box;"> ------
+    <br style="box-sizing: border-box;"> Seyi Adedibu, 
+    <br style="box-sizing: border-box;"> Lead, Programs & Community
+    <br style="box-sizing: border-box;"> Call Line: +2348179368606 // +2348179368462
+    <br style="box-sizing: border-box;"> ReactHQ
+  </p>
+
+  <footer style="box-sizing: border-box;"> 
+    <img class="footer-logo" src="http://127.0.0.1:5500/assets/img/logos/favicon.png" alt="logo" style="box-sizing: border-box; display: block; margin-left: auto; margin-right: auto; padding: 10px 10px 5px 10px; width: 100px">
+    <span style="box-sizing: border-box; color: #636363; font-size: 17px; line-height: 15px; display: block; margin-bottom: 15px; text-align: center;">ReactHQ, Sprint and Spaces are Trademarks of Hydratech Software Solutions Limited</span>
+    <div style="box-sizing: border-box; margin:auto; width:150px">
+      <a href="https://facebook.com/react.ng" style="box-sizing: border-box; display: inline-block; margin-right: 10px;"><img style="width: 30px; height: 30px;" src="https://www.transparentpng.com/thumb/facebook-logo/facebook-icon-transparent-background-20.png" alt="facebook" style="box-sizing: border-box;"></a>
+      <a href="https://www.linkedin.com/company/reactng/" style="box-sizing: border-box; display: inline-block; margin-right: 10px;"><img style="width: 30px; height: 30px;" src="https://www.transparentpng.com/thumb/linkedin/linkedin-icon-png-4.png" alt="linkedin" style="box-sizing: border-box;"></a>
+      <a href="https://instagram.com/react.ng" style="box-sizing: border-box; display: inline-block;"><img style="width: 30px; height: 30px;" src="https://www.transparentpng.com/thumb/instagram/KhAbpR-instagram-free-download.png" alt="instagram" style="box-sizing: border-box;"></a>
+    </div>
+    <hr style="border: 1px solid #acacac; box-sizing: border-box; display:block; margin-bottom: 5px; width: 78%;">
+     <p style="box-sizing: border-box; color: #636363; font-size: 15px; font-weight: 500; text-align: center;">Copyright © 2021 Hydratech Software Solutions Limited. All right reserved.</p>
+  </footer>
+</div>
+</div>
+`
+            );
+            req.flash(
+              "reg_success",
+              "Registration successfull, <br/> please wait for manager for approver !!!"
+            );
+            res.redirect("/admin/register");
+          } else {
+            fs.unlinkSync(req.file.path);
+            error.push({ msg: "unable to register admin" });
+            res.render("./admin/auth/addAdmin", { error });
+            return;
+          }
+        });
       });
     });
   } catch (error) {
@@ -141,12 +237,104 @@ exports.registerAdmin = asyncHandler(async (req, res) => {
   }
 });
 
+// // @DESC: render Verifyadmin to save new admin to admin model
+//@ACCESS: manager
+
+exports.verifyNewAdmin = asyncHandler(async (req, res) => {
+  let error = [];
+  const newAdmin = await verifySchema.findOne({
+    $and: [
+      {
+        _id: req.params.id,
+        token: req.params.token,
+      },
+    ],
+  });
+  if (newAdmin) {
+    res.render("./admin/auth/verifyAdmin", { newAdmin });
+  } else {
+    error.push({ msg: "invalid or expired link" });
+    req.flash({ verify_admin: "invalid verification link" });
+    res.render("./admin/auth/addAdmin", {
+      error,
+      verifyError: req.flash("verify_admin"),
+    });
+  }
+});
+
+// @DESC: move admin from verify model to admin model
+//@ACCESS: private
+exports.saveVerifiedAdmin = asyncHandler(async (req, res) => {
+  let { email, username } = req.body;
+
+  const token = await verifySchema.findOne({
+    $and: [
+      {
+        _id: req.params.id,
+        token: req.params.token,
+      },
+    ],
+  });
+  if (token) {
+    const userNameExist = await adminSchema.findOne({ email: email });
+
+    if (userNameExist) {
+      console.log("username exist");
+      error.push({ msg: "username already link to an existing user" });
+      res.render("./admin/auth/verifyAdmin", { error });
+      return;
+    }
+
+    //@DESC check if user email already exist
+    const emailExist = await adminSchema.findOne({ email: email });
+    if (emailExist) {
+      console.log("email exist");
+      error.push({ msg: "email already link to an existing user" });
+      res.render("./admin/auth/verifyAdmin", { error });
+      return;
+    }
+
+    try {
+      let adminProImg = {
+        img_id: token.profile[0].img_id,
+        img: token.profile[0].img,
+      };
+      console.log(token.password);
+
+      let savedNewVerifiedAdmin = await new adminSchema({
+        username: username || token.username,
+        email: email || token.email,
+        profile: [adminProImg],
+        password: token.password,
+      }).save();
+
+      // @DESC:delete user with this id from verify Schema
+      if (savedNewVerifiedAdmin) {
+        await verifySchema.findByIdAndDelete(req.params.id);
+        req.flash("reg_verify_success", "verification successfull  !!!");
+        res.redirect("/admin/login");
+      }
+    } catch (error) {
+      console.log(
+        "some error occur when trying to add new admin ",
+        error.message
+      );
+    }
+  } else {
+    error.push({ msg: "invalid or expired link" });
+    req.flash({ verify_admin: "invalid verification link" });
+    res.render("./admin/auth/addAdmin", {
+      error,
+      verifyError: req.flash("verify_admin"),
+    });
+  }
+});
 // @DESC: render admin login page
 //@ACCESS: private
 exports.getLoginPage = asyncHandler(async (req, res) => {
   res.render("./admin/auth/LoginAdmin", {
-    successReg: req.flash("reg_success"),
-    pass_Reset_success: req.flash("admin_pass_success"),
+    successReg: req.flash("reg_verify_success"),
+    adminResetsuccess: req.flash("admin_pass_success"),
   });
 });
 
@@ -377,7 +565,7 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
   const user = await adminSchema.find({
     $and: [
       {
-        _id: req.params.id,
+        id: req.params.id,
         token: req.params.token,
       },
     ],
@@ -426,10 +614,7 @@ exports.updateNewPassword = asyncHandler(async (req, res) => {
               { $set: { token: "" } },
               { new: true }
             );
-            req.flash(
-              "admin_pass_success",
-              "admin password  change successfully"
-            );
+            req.flash("admin_pass_success", " password change successfully");
             res.redirect("/admin/login");
           } else {
             error.push({ msg: "unable to update password" });

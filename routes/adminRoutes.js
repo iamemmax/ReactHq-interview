@@ -3,6 +3,8 @@ const router = express.Router();
 const {
   getSignupPage,
   registerAdmin,
+  verifyNewAdmin,
+  saveVerifiedAdmin,
   getLoginPage,
   loginAdmin,
   LogOutAdmin,
@@ -21,6 +23,7 @@ router
   .route("/register")
   .get(getSignupPage)
   .post(upload.single("profile"), registerAdmin);
+router.route("/verify/:id/:token").get(verifyNewAdmin).post(saveVerifiedAdmin);
 router.route("/login").get(getLoginPage).post(loginAdmin);
 
 // @DESC forget password
